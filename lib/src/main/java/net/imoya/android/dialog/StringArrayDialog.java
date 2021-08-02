@@ -68,6 +68,7 @@ public class StringArrayDialog extends ListDialog {
          * @return {@link Builder}
          */
         @Override
+        @NonNull
         public Builder setTitle(@NonNull String title) {
             super.setTitle(title);
             return this;
@@ -81,6 +82,7 @@ public class StringArrayDialog extends ListDialog {
          * @throws IllegalArgumentException このメソッドが呼び出されました。
          */
         @Override
+        @NonNull
         public Builder setMessage(@NonNull String message) {
             throw new IllegalArgumentException(
                     "Don't use setMessage for StringArrayDialog. Use setTitle() instead.");
@@ -93,6 +95,7 @@ public class StringArrayDialog extends ListDialog {
          * @return {@link Builder}
          */
         @Override
+        @NonNull
         public Builder setTag(@NonNull String tag) {
             super.setTag(tag);
             return this;
@@ -105,6 +108,8 @@ public class StringArrayDialog extends ListDialog {
          * @param items 選択項目リストとなる、文字列配列
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setItems(@NonNull CharSequence[] items) {
             this.items = items;
             return this;
@@ -118,6 +123,7 @@ public class StringArrayDialog extends ListDialog {
          * @param resourceId 選択項目リストとなる、文字列配列のリソースID
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setItems(int resourceId) {
             this.items = this.getContext().getResources().getStringArray(resourceId);
             return this;
@@ -129,6 +135,7 @@ public class StringArrayDialog extends ListDialog {
          * @return {@link DialogBase}
          */
         @Override
+        @NonNull
         protected DialogBase createFragment() {
             return new StringArrayDialog();
         }
@@ -139,6 +146,7 @@ public class StringArrayDialog extends ListDialog {
          * @return 引数を含んだ {@link Bundle}
          */
         @Override
+        @NonNull
         protected Bundle makeArguments() {
             final Bundle arguments = super.makeArguments();
 
@@ -159,6 +167,9 @@ public class StringArrayDialog extends ListDialog {
     @Override
     @NonNull
     public Dialog createDialog(Bundle savedInstanceState) {
+        if (this.listener == null) {
+            throw new RuntimeException("listener is null");
+        }
         final Bundle arguments = this.requireArguments();
         final CharSequence[] items = arguments.getCharSequenceArray(KEY_ITEMS);
         Log.d(TAG, "createDialog: items = " + (items != null ? Arrays.asList(items) : "(null)"));

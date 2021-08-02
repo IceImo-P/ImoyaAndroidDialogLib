@@ -31,6 +31,7 @@ import androidx.fragment.app.Fragment;
  * {@link Activity#RESULT_CANCELED} となります。</li>
  * </ul>
  */
+@SuppressWarnings("unused")
 public class MultiChoiceDialog extends MultiChoiceDialogBase {
     /**
      * ダイアログビルダ
@@ -64,6 +65,7 @@ public class MultiChoiceDialog extends MultiChoiceDialogBase {
          * @return {@link DialogBase}
          */
         @Override
+        @NonNull
         protected DialogBase createFragment() {
             return new MultiChoiceDialog();
         }

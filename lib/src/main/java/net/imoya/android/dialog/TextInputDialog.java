@@ -34,6 +34,7 @@ import java.util.Objects;
  * {@link Activity#RESULT_CANCELED} となります。</li>
  * </ul>
  */
+@SuppressWarnings("unused")
 public class TextInputDialog extends InputDialog {
     /**
      * ダイアログビルダ
@@ -71,6 +72,8 @@ public class TextInputDialog extends InputDialog {
          * @param title タイトル文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setTitle(@NonNull String title) {
             super.setTitle(title);
             return this;
@@ -82,6 +85,8 @@ public class TextInputDialog extends InputDialog {
          * @param message メッセージ文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setMessage(@NonNull String message) {
             super.setMessage(message);
             return this;
@@ -93,6 +98,8 @@ public class TextInputDialog extends InputDialog {
          * @param tag タグ
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setTag(@NonNull String tag) {
             super.setTag(tag);
             return this;
@@ -104,6 +111,8 @@ public class TextInputDialog extends InputDialog {
          * @param buttonTitle ボタン文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setPositiveButtonTitle(@NonNull String buttonTitle) {
             super.setPositiveButtonTitle(buttonTitle);
             return this;
@@ -115,6 +124,8 @@ public class TextInputDialog extends InputDialog {
          * @param buttonTitle ボタン文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setNegativeButtonTitle(@NonNull String buttonTitle) {
             super.setNegativeButtonTitle(buttonTitle);
             return this;
@@ -130,6 +141,8 @@ public class TextInputDialog extends InputDialog {
          * @param layoutResourceId 入力部分のレイアウトリソースID
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setLayoutResourceId(int layoutResourceId) {
             super.setLayoutResourceId(layoutResourceId);
             return this;
@@ -141,6 +154,8 @@ public class TextInputDialog extends InputDialog {
          * @param hint ヒント文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setHint(String hint) {
             super.setHint(hint);
             return this;
@@ -152,6 +167,8 @@ public class TextInputDialog extends InputDialog {
          * @param inputType 入力種別
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setInputType(int inputType) {
             super.setInputType(inputType);
             return this;
@@ -163,6 +180,8 @@ public class TextInputDialog extends InputDialog {
          * @param maxLength 最大入力可能文字数
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setMaxLength(int maxLength) {
             super.setMaxLength(maxLength);
             return this;
@@ -174,6 +193,7 @@ public class TextInputDialog extends InputDialog {
          * @param text 入力初期値
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setText(@NonNull String text) {
             this.text = text;
             return this;
@@ -185,6 +205,7 @@ public class TextInputDialog extends InputDialog {
          * @return {@link DialogBase}
          */
         @Override
+        @NonNull
         protected DialogBase createFragment() {
             return new TextInputDialog();
         }
@@ -195,6 +216,7 @@ public class TextInputDialog extends InputDialog {
          * @return 引数を含んだ {@link Bundle}
          */
         @Override
+        @NonNull
         protected Bundle makeArguments() {
             final Bundle arguments = super.makeArguments();
 
@@ -227,6 +249,7 @@ public class TextInputDialog extends InputDialog {
          * @return {@link Intent}
          */
         @Override
+        @NonNull
         protected Intent makeData() {
             final Intent intent = super.makeData();
             intent.putExtra(EXTRA_KEY_INPUT_VALUE, ((TextInputDialog) this.dialog).getInputText());

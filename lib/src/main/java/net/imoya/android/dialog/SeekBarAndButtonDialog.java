@@ -76,6 +76,8 @@ public class SeekBarAndButtonDialog extends SeekBarInputDialog implements View.O
          * @param title タイトル文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setTitle(@NonNull String title) {
             super.setTitle(title);
             return this;
@@ -87,6 +89,8 @@ public class SeekBarAndButtonDialog extends SeekBarInputDialog implements View.O
          * @param message メッセージ文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setMessage(@NonNull String message) {
             super.setMessage(message);
             return this;
@@ -98,6 +102,8 @@ public class SeekBarAndButtonDialog extends SeekBarInputDialog implements View.O
          * @param tag タグ
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setTag(@NonNull String tag) {
             super.setTag(tag);
             return this;
@@ -109,6 +115,8 @@ public class SeekBarAndButtonDialog extends SeekBarInputDialog implements View.O
          * @param buttonTitle ボタン文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setPositiveButtonTitle(@NonNull String buttonTitle) {
             super.setPositiveButtonTitle(buttonTitle);
             return this;
@@ -120,6 +128,8 @@ public class SeekBarAndButtonDialog extends SeekBarInputDialog implements View.O
          * @param buttonTitle ボタン文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setNegativeButtonTitle(@NonNull String buttonTitle) {
             super.setNegativeButtonTitle(buttonTitle);
             return this;
@@ -137,6 +147,8 @@ public class SeekBarAndButtonDialog extends SeekBarInputDialog implements View.O
          * @param layoutResourceId 入力部分のレイアウトリソースID
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setLayoutResourceId(int layoutResourceId) {
             super.setLayoutResourceId(layoutResourceId);
             return this;
@@ -148,6 +160,8 @@ public class SeekBarAndButtonDialog extends SeekBarInputDialog implements View.O
          * @param min 最小値
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setMin(int min) {
             super.setMin(min);
             return this;
@@ -159,6 +173,8 @@ public class SeekBarAndButtonDialog extends SeekBarInputDialog implements View.O
          * @param max 最大値
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setMax(int max) {
             super.setMax(max);
             return this;
@@ -170,6 +186,8 @@ public class SeekBarAndButtonDialog extends SeekBarInputDialog implements View.O
          * @param value 初期値
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setValue(int value) {
             super.setValue(value);
             return this;
@@ -181,6 +199,7 @@ public class SeekBarAndButtonDialog extends SeekBarInputDialog implements View.O
          * @param additionalButtonText 追加ボタン文言
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setAdditionalButtonText(String additionalButtonText) {
             this.additionalButtonText = additionalButtonText;
             return this;
@@ -192,6 +211,7 @@ public class SeekBarAndButtonDialog extends SeekBarInputDialog implements View.O
          * @return {@link DialogBase}
          */
         @Override
+        @NonNull
         protected DialogBase createFragment() {
             return new SeekBarAndButtonDialog();
         }
@@ -202,6 +222,7 @@ public class SeekBarAndButtonDialog extends SeekBarInputDialog implements View.O
          * @return 引数を含んだ {@link Bundle}
          */
         @Override
+        @NonNull
         protected Bundle makeArguments() {
             final Bundle arguments = super.makeArguments();
 
@@ -232,6 +253,7 @@ public class SeekBarAndButtonDialog extends SeekBarInputDialog implements View.O
          * @return {@link Intent}
          */
         @Override
+        @NonNull
         protected Intent makeData() {
             final Intent intent = super.makeData();
             intent.putExtra(EXTRA_KEY_INPUT_VALUE,

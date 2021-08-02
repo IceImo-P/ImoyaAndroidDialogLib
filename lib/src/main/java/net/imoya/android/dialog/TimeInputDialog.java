@@ -82,7 +82,7 @@ public class TimeInputDialog extends OkCancelDialog {
          */
         public <T extends AppCompatActivity & Listener> Builder(
                 @NonNull T activity, int requestCode) {
-            super(activity, requestCode);
+            super(new BuilderParentActivity<>(activity), requestCode);
         }
 
         /**
@@ -92,7 +92,7 @@ public class TimeInputDialog extends OkCancelDialog {
          * @param requestCode リクエストコード
          */
         public <T extends Fragment & Listener> Builder(@NonNull T fragment, int requestCode) {
-            super(fragment, requestCode);
+            super(new BuilderParentFragment<>(fragment), requestCode);
         }
 
         /**
@@ -101,6 +101,8 @@ public class TimeInputDialog extends OkCancelDialog {
          * @param title タイトル文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setTitle(@NonNull String title) {
             super.setTitle(title);
             return this;
@@ -112,6 +114,8 @@ public class TimeInputDialog extends OkCancelDialog {
          * @param message メッセージ文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setMessage(@NonNull String message) {
             super.setMessage(message);
             return this;
@@ -123,6 +127,8 @@ public class TimeInputDialog extends OkCancelDialog {
          * @param tag タグ
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setTag(@NonNull String tag) {
             super.setTag(tag);
             return this;
@@ -134,6 +140,7 @@ public class TimeInputDialog extends OkCancelDialog {
          * @param buttonTitle ボタン文言
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setPositiveButtonTitle(@NonNull String buttonTitle) {
             this.positiveButtonTitle = buttonTitle;
             return this;
@@ -145,6 +152,7 @@ public class TimeInputDialog extends OkCancelDialog {
          * @param buttonTitle ボタン文言
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setNegativeButtonTitle(@NonNull String buttonTitle) {
             this.negativeButtonTitle = buttonTitle;
             return this;
@@ -189,6 +197,7 @@ public class TimeInputDialog extends OkCancelDialog {
          * @return {@link DialogBase}
          */
         @Override
+        @NonNull
         protected DialogBase createFragment() {
             return new TimeInputDialog();
         }
@@ -199,6 +208,7 @@ public class TimeInputDialog extends OkCancelDialog {
          * @return 引数を含んだ {@link Bundle}
          */
         @Override
+        @NonNull
         protected Bundle makeArguments() {
             final Bundle arguments = super.makeArguments();
 
@@ -238,6 +248,7 @@ public class TimeInputDialog extends OkCancelDialog {
         }
 
         @Override
+        @NonNull
         protected Intent makeData() {
             final Intent data = super.makeData();
             final TimeInputDialog dialog = (TimeInputDialog) this.dialog;

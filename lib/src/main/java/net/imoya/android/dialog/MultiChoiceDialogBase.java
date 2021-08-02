@@ -35,6 +35,7 @@ import java.util.Arrays;
  * {@link Activity#RESULT_CANCELED} となります。</li>
  * </ul>
  */
+@SuppressWarnings("unused")
 public abstract class MultiChoiceDialogBase extends OkCancelDialog {
     /**
      * 結果キー定義:選択位置
@@ -84,6 +85,7 @@ public abstract class MultiChoiceDialogBase extends OkCancelDialog {
          * @return {@link Builder}
          */
         @Override
+        @NonNull
         public Builder setTitle(@NonNull String title) {
             super.setTitle(title);
             return this;
@@ -97,6 +99,7 @@ public abstract class MultiChoiceDialogBase extends OkCancelDialog {
          * @throws IllegalArgumentException このメソッドが呼び出されました。
          */
         @Override
+        @NonNull
         public Builder setMessage(@NonNull String message) {
             throw new IllegalArgumentException(
                     "Don't use setMessage for StringArrayDialog. Use setTitle() instead.");
@@ -109,6 +112,7 @@ public abstract class MultiChoiceDialogBase extends OkCancelDialog {
          * @return {@link Builder}
          */
         @Override
+        @NonNull
         public Builder setTag(@NonNull String tag) {
             super.setTag(tag);
             return this;
@@ -121,6 +125,7 @@ public abstract class MultiChoiceDialogBase extends OkCancelDialog {
          * @return {@link Builder}
          */
         @Override
+        @NonNull
         public Builder setPositiveButtonTitle(@NonNull String buttonTitle) {
             super.setPositiveButtonTitle(buttonTitle);
             return this;
@@ -133,6 +138,7 @@ public abstract class MultiChoiceDialogBase extends OkCancelDialog {
          * @return {@link Builder}
          */
         @Override
+        @NonNull
         public Builder setNegativeButtonTitle(@NonNull String buttonTitle) {
             super.setNegativeButtonTitle(buttonTitle);
             return this;
@@ -146,6 +152,7 @@ public abstract class MultiChoiceDialogBase extends OkCancelDialog {
          * @param items 選択項目リスト
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setItems(@NonNull String[] items) {
             this.items = items;
             return this;
@@ -162,6 +169,7 @@ public abstract class MultiChoiceDialogBase extends OkCancelDialog {
          * @param checkedList 全選択項目の選択状態リスト
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setCheckedList(boolean[] checkedList) {
             this.checkedList = checkedList;
             return this;
@@ -173,6 +181,7 @@ public abstract class MultiChoiceDialogBase extends OkCancelDialog {
          * @return 引数を含んだ {@link Bundle}
          */
         @Override
+        @NonNull
         protected Bundle makeArguments() {
             final Bundle arguments = super.makeArguments();
 
@@ -199,6 +208,7 @@ public abstract class MultiChoiceDialogBase extends OkCancelDialog {
         }
 
         @Override
+        @NonNull
         protected Intent makeData() {
             final Intent data = super.makeData();
             data.putExtra(

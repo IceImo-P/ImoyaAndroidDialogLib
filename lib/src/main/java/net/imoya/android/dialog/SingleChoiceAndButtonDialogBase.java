@@ -38,6 +38,7 @@ import androidx.fragment.app.Fragment;
  * {@link #onClickAdditionalButton()} メソッドを override して実装してください。</li>
  * </ul>
  */
+@SuppressWarnings("unused")
 public abstract class SingleChoiceAndButtonDialogBase extends SingleChoiceDialogBase
         implements RadioGroup.OnCheckedChangeListener, View.OnClickListener {
     /**
@@ -78,6 +79,7 @@ public abstract class SingleChoiceAndButtonDialogBase extends SingleChoiceDialog
          * @return {@link Builder}
          */
         @Override
+        @NonNull
         public Builder setTitle(@NonNull String title) {
             super.setTitle(title);
             return this;
@@ -91,6 +93,7 @@ public abstract class SingleChoiceAndButtonDialogBase extends SingleChoiceDialog
          * @throws IllegalArgumentException このメソッドが呼び出されました。
          */
         @Override
+        @NonNull
         public Builder setMessage(@NonNull String message) {
             throw new IllegalArgumentException(
                     "Don't use setMessage for StringArrayDialog. Use setTitle() instead.");
@@ -103,6 +106,7 @@ public abstract class SingleChoiceAndButtonDialogBase extends SingleChoiceDialog
          * @return {@link Builder}
          */
         @Override
+        @NonNull
         public Builder setTag(@NonNull String tag) {
             super.setTag(tag);
             return this;
@@ -115,6 +119,7 @@ public abstract class SingleChoiceAndButtonDialogBase extends SingleChoiceDialog
          * @return {@link Builder}
          */
         @Override
+        @NonNull
         public Builder setPositiveButtonTitle(@NonNull String buttonTitle) {
             super.setPositiveButtonTitle(buttonTitle);
             return this;
@@ -127,6 +132,7 @@ public abstract class SingleChoiceAndButtonDialogBase extends SingleChoiceDialog
          * @return {@link Builder}
          */
         @Override
+        @NonNull
         public Builder setNegativeButtonTitle(@NonNull String buttonTitle) {
             super.setNegativeButtonTitle(buttonTitle);
             return this;
@@ -138,6 +144,7 @@ public abstract class SingleChoiceAndButtonDialogBase extends SingleChoiceDialog
          * @param items 選択項目リスト
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setItems(String[] items) {
             super.setItems(items);
             return this;
@@ -149,6 +156,7 @@ public abstract class SingleChoiceAndButtonDialogBase extends SingleChoiceDialog
          * @param selectedPosition 初期選択位置、又は未選択状態を指定する -1
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setSelectedPosition(int selectedPosition) {
             super.setSelectedPosition(selectedPosition);
             return this;
@@ -160,6 +168,7 @@ public abstract class SingleChoiceAndButtonDialogBase extends SingleChoiceDialog
          * @param additionalButtonText 追加ボタン文言
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setAdditionalButtonText(String additionalButtonText) {
             this.additionalButtonText = additionalButtonText;
             return this;
@@ -171,6 +180,7 @@ public abstract class SingleChoiceAndButtonDialogBase extends SingleChoiceDialog
          * @return 引数を含んだ {@link Bundle}
          */
         @Override
+        @NonNull
         protected Bundle makeArguments() {
             final Bundle arguments = super.makeArguments();
 

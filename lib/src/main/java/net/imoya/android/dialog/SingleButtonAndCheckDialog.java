@@ -84,6 +84,8 @@ public class SingleButtonAndCheckDialog extends SingleButtonDialog {
          * @param title タイトル文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setTitle(@NonNull String title) {
             super.setTitle(title);
             return this;
@@ -95,6 +97,8 @@ public class SingleButtonAndCheckDialog extends SingleButtonDialog {
          * @param message メッセージ文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setMessage(@NonNull String message) {
             super.setMessage(message);
             return this;
@@ -106,6 +110,8 @@ public class SingleButtonAndCheckDialog extends SingleButtonDialog {
          * @param tag タグ
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setTag(@NonNull String tag) {
             super.setTag(tag);
             return this;
@@ -117,6 +123,8 @@ public class SingleButtonAndCheckDialog extends SingleButtonDialog {
          * @param buttonTitle ボタン文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setButtonTitle(@NonNull String buttonTitle) {
             super.setButtonTitle(buttonTitle);
             return this;
@@ -128,6 +136,7 @@ public class SingleButtonAndCheckDialog extends SingleButtonDialog {
          * @param checkBoxText チェックボックス文言
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setCheckBoxText(String checkBoxText) {
             this.checkBoxText = checkBoxText;
             return this;
@@ -139,6 +148,7 @@ public class SingleButtonAndCheckDialog extends SingleButtonDialog {
          * @param checked チェックボックス初期状態
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setChecked(boolean checked) {
             this.checked = checked;
             return this;
@@ -150,6 +160,7 @@ public class SingleButtonAndCheckDialog extends SingleButtonDialog {
          * @return {@link DialogBase}
          */
         @Override
+        @NonNull
         protected DialogBase createFragment() {
             return new SingleButtonAndCheckDialog();
         }
@@ -160,6 +171,7 @@ public class SingleButtonAndCheckDialog extends SingleButtonDialog {
          * @return 引数を含んだ {@link Bundle}
          */
         @Override
+        @NonNull
         protected Bundle makeArguments() {
             final Bundle arguments = super.makeArguments();
 
@@ -192,6 +204,8 @@ public class SingleButtonAndCheckDialog extends SingleButtonDialog {
          *
          * @return {@link Intent}
          */
+        @Override
+        @NonNull
         protected Intent makeData() {
             // チェックボックス状態を含める
             final Intent data = new Intent();

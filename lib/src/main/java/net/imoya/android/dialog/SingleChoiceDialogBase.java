@@ -79,6 +79,7 @@ public abstract class SingleChoiceDialogBase extends OkCancelDialog {
          * @return {@link Builder}
          */
         @Override
+        @NonNull
         public Builder setTitle(@NonNull String title) {
             super.setTitle(title);
             return this;
@@ -92,6 +93,7 @@ public abstract class SingleChoiceDialogBase extends OkCancelDialog {
          * @throws IllegalArgumentException このメソッドが呼び出されました。
          */
         @Override
+        @NonNull
         public Builder setMessage(@NonNull String message) {
             throw new IllegalArgumentException(
                     "Don't use setMessage for StringArrayDialog. Use setTitle() instead.");
@@ -104,6 +106,7 @@ public abstract class SingleChoiceDialogBase extends OkCancelDialog {
          * @return {@link Builder}
          */
         @Override
+        @NonNull
         public Builder setTag(@NonNull String tag) {
             super.setTag(tag);
             return this;
@@ -116,6 +119,7 @@ public abstract class SingleChoiceDialogBase extends OkCancelDialog {
          * @return {@link Builder}
          */
         @Override
+        @NonNull
         public Builder setPositiveButtonTitle(@NonNull String buttonTitle) {
             super.setPositiveButtonTitle(buttonTitle);
             return this;
@@ -128,6 +132,7 @@ public abstract class SingleChoiceDialogBase extends OkCancelDialog {
          * @return {@link Builder}
          */
         @Override
+        @NonNull
         public Builder setNegativeButtonTitle(@NonNull String buttonTitle) {
             super.setNegativeButtonTitle(buttonTitle);
             return this;
@@ -139,6 +144,7 @@ public abstract class SingleChoiceDialogBase extends OkCancelDialog {
          * @param items 選択項目リスト
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setItems(String[] items) {
             this.items = items;
             return this;
@@ -150,6 +156,7 @@ public abstract class SingleChoiceDialogBase extends OkCancelDialog {
          * @param selectedPosition 初期選択位置、又は未選択状態を指定する -1
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setSelectedPosition(int selectedPosition) {
             this.selectedPosition = selectedPosition;
             return this;
@@ -161,6 +168,7 @@ public abstract class SingleChoiceDialogBase extends OkCancelDialog {
          * @return 引数を含んだ {@link Bundle}
          */
         @Override
+        @NonNull
         protected Bundle makeArguments() {
             final Bundle arguments = super.makeArguments();
 
@@ -194,6 +202,7 @@ public abstract class SingleChoiceDialogBase extends OkCancelDialog {
          * @return {@link Intent}
          */
         @Override
+        @NonNull
         protected Intent makeData() {
             final Intent data = super.makeData();
             data.putExtra(

@@ -40,6 +40,7 @@ import java.util.Objects;
  * {@link Activity#RESULT_CANCELED} となります。</li>
  * </ul>
  */
+@SuppressWarnings("unused")
 public class SeekBarInputDialog extends OkCancelDialog
         implements SeekBar.OnSeekBarChangeListener, TextWatcher {
     /**
@@ -95,6 +96,8 @@ public class SeekBarInputDialog extends OkCancelDialog
          * @param title タイトル文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setTitle(@NonNull String title) {
             super.setTitle(title);
             return this;
@@ -106,6 +109,8 @@ public class SeekBarInputDialog extends OkCancelDialog
          * @param message メッセージ文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setMessage(@NonNull String message) {
             super.setMessage(message);
             return this;
@@ -117,6 +122,8 @@ public class SeekBarInputDialog extends OkCancelDialog
          * @param tag タグ
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setTag(@NonNull String tag) {
             super.setTag(tag);
             return this;
@@ -128,6 +135,8 @@ public class SeekBarInputDialog extends OkCancelDialog
          * @param buttonTitle ボタン文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setPositiveButtonTitle(@NonNull String buttonTitle) {
             super.setPositiveButtonTitle(buttonTitle);
             return this;
@@ -139,6 +148,8 @@ public class SeekBarInputDialog extends OkCancelDialog
          * @param buttonTitle ボタン文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setNegativeButtonTitle(@NonNull String buttonTitle) {
             super.setNegativeButtonTitle(buttonTitle);
             return this;
@@ -155,6 +166,7 @@ public class SeekBarInputDialog extends OkCancelDialog
          * @param layoutResourceId 入力部分のレイアウトリソースID
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setLayoutResourceId(int layoutResourceId) {
             this.layoutResourceId = layoutResourceId;
             return this;
@@ -166,6 +178,7 @@ public class SeekBarInputDialog extends OkCancelDialog
          * @param min 最小値
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setMin(int min) {
             this.min = min;
             return this;
@@ -177,6 +190,7 @@ public class SeekBarInputDialog extends OkCancelDialog
          * @param max 最大値
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setMax(int max) {
             this.max = max;
             return this;
@@ -188,6 +202,7 @@ public class SeekBarInputDialog extends OkCancelDialog
          * @param value 初期値
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setValue(int value) {
             this.value = value;
             return this;
@@ -199,6 +214,7 @@ public class SeekBarInputDialog extends OkCancelDialog
          * @return {@link DialogBase}
          */
         @Override
+        @NonNull
         protected DialogBase createFragment() {
             return new SeekBarInputDialog();
         }
@@ -209,6 +225,7 @@ public class SeekBarInputDialog extends OkCancelDialog
          * @return 引数を含んだ {@link Bundle}
          */
         @Override
+        @NonNull
         protected Bundle makeArguments() {
             final Bundle arguments = super.makeArguments();
 
@@ -247,6 +264,7 @@ public class SeekBarInputDialog extends OkCancelDialog
          * @return {@link Intent}
          */
         @Override
+        @NonNull
         protected Intent makeData() {
             final Intent intent = super.makeData();
             intent.putExtra(EXTRA_KEY_INPUT_VALUE, ((SeekBarInputDialog) this.dialog).getValue());

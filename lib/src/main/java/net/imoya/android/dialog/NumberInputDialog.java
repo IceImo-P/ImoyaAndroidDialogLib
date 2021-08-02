@@ -38,6 +38,7 @@ import java.util.Objects;
  * {@link Activity#RESULT_CANCELED} となります。</li>
  * </ul>
  */
+@SuppressWarnings("unused")
 public class NumberInputDialog extends InputDialog {
     /**
      * ダイアログビルダ
@@ -83,6 +84,8 @@ public class NumberInputDialog extends InputDialog {
          * @param title タイトル文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setTitle(@NonNull String title) {
             super.setTitle(title);
             return this;
@@ -94,6 +97,8 @@ public class NumberInputDialog extends InputDialog {
          * @param message メッセージ文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setMessage(@NonNull String message) {
             super.setMessage(message);
             return this;
@@ -105,6 +110,8 @@ public class NumberInputDialog extends InputDialog {
          * @param tag タグ
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setTag(@NonNull String tag) {
             super.setTag(tag);
             return this;
@@ -116,6 +123,8 @@ public class NumberInputDialog extends InputDialog {
          * @param buttonTitle ボタン文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setPositiveButtonTitle(@NonNull String buttonTitle) {
             super.setPositiveButtonTitle(buttonTitle);
             return this;
@@ -127,6 +136,8 @@ public class NumberInputDialog extends InputDialog {
          * @param buttonTitle ボタン文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setNegativeButtonTitle(@NonNull String buttonTitle) {
             super.setNegativeButtonTitle(buttonTitle);
             return this;
@@ -143,6 +154,8 @@ public class NumberInputDialog extends InputDialog {
          * @param layoutResourceId 入力部分のレイアウトリソースID
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setLayoutResourceId(int layoutResourceId) {
             super.setLayoutResourceId(layoutResourceId);
             return this;
@@ -154,6 +167,8 @@ public class NumberInputDialog extends InputDialog {
          * @param hint ヒント文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setHint(String hint) {
             super.setHint(hint);
             return this;
@@ -165,6 +180,8 @@ public class NumberInputDialog extends InputDialog {
          * @param inputType 入力種別
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setInputType(int inputType) {
             super.setInputType(inputType);
             return this;
@@ -176,6 +193,7 @@ public class NumberInputDialog extends InputDialog {
          * @param number 入力初期値
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setNumber(int number) {
             this.number = number;
             this.numberIsSet = true;
@@ -188,6 +206,7 @@ public class NumberInputDialog extends InputDialog {
          * @param unit 単位
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setUnit(@Nullable String unit) {
             this.unit = unit;
             return this;
@@ -199,6 +218,7 @@ public class NumberInputDialog extends InputDialog {
          * @return {@link DialogBase}
          */
         @Override
+        @NonNull
         protected DialogBase createFragment() {
             return new NumberInputDialog();
         }
@@ -209,6 +229,7 @@ public class NumberInputDialog extends InputDialog {
          * @return 引数を含んだ {@link Bundle}
          */
         @Override
+        @NonNull
         protected Bundle makeArguments() {
             final Bundle arguments = super.makeArguments();
 
@@ -244,6 +265,7 @@ public class NumberInputDialog extends InputDialog {
          * @return {@link Intent}
          */
         @Override
+        @NonNull
         protected Intent makeData() {
             final Intent intent = super.makeData();
             final NumberInputDialog dialog = (NumberInputDialog) this.dialog;

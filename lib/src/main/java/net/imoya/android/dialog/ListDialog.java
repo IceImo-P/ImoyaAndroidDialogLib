@@ -29,7 +29,7 @@ public abstract class ListDialog extends DialogBase {
          * @param <P>        親画面は {@link Listener} を実装した {@link AppCompatActivity} であること
          */
         public <P extends AppCompatActivity & Listener> Builder(@NonNull P activity, int requestCode) {
-            super(activity, requestCode);
+            super(new BuilderParentActivity<>(activity), requestCode);
         }
 
         /**
@@ -40,7 +40,7 @@ public abstract class ListDialog extends DialogBase {
          * @param <P>        親画面は {@link Listener} を実装した {@link Fragment} であること
          */
         public <P extends Fragment & Listener> Builder(@NonNull P fragment, int requestCode) {
-            super(fragment, requestCode);
+            super(new BuilderParentFragment<>(fragment), requestCode);
         }
 
         /**
@@ -49,6 +49,8 @@ public abstract class ListDialog extends DialogBase {
          * @param title タイトル文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder<T> setTitle(@NonNull String title) {
             super.setTitle(title);
             return this;
@@ -60,6 +62,8 @@ public abstract class ListDialog extends DialogBase {
          * @param message メッセージ文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder<T> setMessage(@NonNull String message) {
             super.setMessage(message);
             return this;
@@ -71,6 +75,8 @@ public abstract class ListDialog extends DialogBase {
          * @param tag タグ
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder<T> setTag(@NonNull String tag) {
             super.setTag(tag);
             return this;
@@ -82,6 +88,7 @@ public abstract class ListDialog extends DialogBase {
          * @param items 選択項目リスト
          * @return {@link Builder}
          */
+        @NonNull
         public Builder<T> setItems(@NonNull T[] items) {
             this.items = items;
             return this;
@@ -93,6 +100,7 @@ public abstract class ListDialog extends DialogBase {
          * @return {@link DialogBase}
          */
         @Override
+        @NonNull
         protected DialogBase createFragment() {
             return new SingleButtonDialog();
         }

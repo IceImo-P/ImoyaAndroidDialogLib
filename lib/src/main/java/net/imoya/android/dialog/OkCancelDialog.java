@@ -62,6 +62,8 @@ public class OkCancelDialog extends TwoButtonDialog {
          * @param title タイトル文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setTitle(@NonNull String title) {
             super.setTitle(title);
             return this;
@@ -73,6 +75,8 @@ public class OkCancelDialog extends TwoButtonDialog {
          * @param message メッセージ文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setMessage(@NonNull String message) {
             super.setMessage(message);
             return this;
@@ -84,6 +88,8 @@ public class OkCancelDialog extends TwoButtonDialog {
          * @param tag タグ
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setTag(@NonNull String tag) {
             super.setTag(tag);
             return this;
@@ -95,6 +101,8 @@ public class OkCancelDialog extends TwoButtonDialog {
          * @param buttonTitle ボタン文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setPositiveButtonTitle(@NonNull String buttonTitle) {
             super.setPositiveButtonTitle(buttonTitle);
             return this;
@@ -106,6 +114,8 @@ public class OkCancelDialog extends TwoButtonDialog {
          * @param buttonTitle ボタン文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setNegativeButtonTitle(@NonNull String buttonTitle) {
             super.setNegativeButtonTitle(buttonTitle);
             return this;
@@ -117,6 +127,7 @@ public class OkCancelDialog extends TwoButtonDialog {
          * @return {@link DialogBase}
          */
         @Override
+        @NonNull
         protected DialogBase createFragment() {
             return new OkCancelDialog();
         }
@@ -154,7 +165,7 @@ public class OkCancelDialog extends TwoButtonDialog {
          * @param which           クリックされたボタンの位置
          */
         @Override
-        protected void callListener(DialogInterface dialogInterface, int which) {
+        protected void callListener(@NonNull DialogInterface dialogInterface, int which) {
             this.listener.onDialogResult(
                     this.dialog.getRequestCode(), this.getResultCode(which), this.makeData());
         }

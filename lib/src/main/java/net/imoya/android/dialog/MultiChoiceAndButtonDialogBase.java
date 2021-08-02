@@ -80,6 +80,7 @@ public abstract class MultiChoiceAndButtonDialogBase extends MultiChoiceDialogBa
          * @return {@link Builder}
          */
         @Override
+        @NonNull
         public Builder setTitle(@NonNull String title) {
             super.setTitle(title);
             return this;
@@ -93,6 +94,7 @@ public abstract class MultiChoiceAndButtonDialogBase extends MultiChoiceDialogBa
          * @throws IllegalArgumentException このメソッドが呼び出されました。
          */
         @Override
+        @NonNull
         public Builder setMessage(@NonNull String message) {
             throw new IllegalArgumentException(
                     "Don't use setMessage for StringArrayDialog. Use setTitle() instead.");
@@ -105,6 +107,7 @@ public abstract class MultiChoiceAndButtonDialogBase extends MultiChoiceDialogBa
          * @return {@link Builder}
          */
         @Override
+        @NonNull
         public Builder setTag(@NonNull String tag) {
             super.setTag(tag);
             return this;
@@ -117,6 +120,7 @@ public abstract class MultiChoiceAndButtonDialogBase extends MultiChoiceDialogBa
          * @return {@link Builder}
          */
         @Override
+        @NonNull
         public Builder setPositiveButtonTitle(@NonNull String buttonTitle) {
             super.setPositiveButtonTitle(buttonTitle);
             return this;
@@ -129,6 +133,7 @@ public abstract class MultiChoiceAndButtonDialogBase extends MultiChoiceDialogBa
          * @return {@link Builder}
          */
         @Override
+        @NonNull
         public Builder setNegativeButtonTitle(@NonNull String buttonTitle) {
             super.setNegativeButtonTitle(buttonTitle);
             return this;
@@ -140,6 +145,7 @@ public abstract class MultiChoiceAndButtonDialogBase extends MultiChoiceDialogBa
          * @param items 選択項目リスト
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setItems(@NonNull String[] items) {
             super.setItems(items);
             return this;
@@ -151,6 +157,7 @@ public abstract class MultiChoiceAndButtonDialogBase extends MultiChoiceDialogBa
          * @param checkedList 全選択項目の選択状態リスト
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setCheckedList(boolean[] checkedList) {
             super.setCheckedList(checkedList);
             return this;
@@ -173,6 +180,7 @@ public abstract class MultiChoiceAndButtonDialogBase extends MultiChoiceDialogBa
          * @return 引数を含んだ {@link Bundle}
          */
         @Override
+        @NonNull
         protected Bundle makeArguments() {
             final Bundle arguments = super.makeArguments();
 

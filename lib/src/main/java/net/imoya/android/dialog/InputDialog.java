@@ -20,6 +20,7 @@ import java.util.ArrayList;
 /**
  * 入力ダイアログの共通部分
  */
+@SuppressWarnings("unused")
 public abstract class InputDialog extends OkCancelDialog {
     /**
      * 結果キー定義:入力値
@@ -79,6 +80,8 @@ public abstract class InputDialog extends OkCancelDialog {
          * @param title タイトル文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setTitle(@NonNull String title) {
             super.setTitle(title);
             return this;
@@ -90,6 +93,8 @@ public abstract class InputDialog extends OkCancelDialog {
          * @param message メッセージ文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setMessage(@NonNull String message) {
             super.setMessage(message);
             return this;
@@ -101,6 +106,8 @@ public abstract class InputDialog extends OkCancelDialog {
          * @param tag タグ
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setTag(@NonNull String tag) {
             super.setTag(tag);
             return this;
@@ -112,6 +119,8 @@ public abstract class InputDialog extends OkCancelDialog {
          * @param buttonTitle ボタン文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setPositiveButtonTitle(@NonNull String buttonTitle) {
             super.setPositiveButtonTitle(buttonTitle);
             return this;
@@ -123,6 +132,8 @@ public abstract class InputDialog extends OkCancelDialog {
          * @param buttonTitle ボタン文言
          * @return {@link Builder}
          */
+        @Override
+        @NonNull
         public Builder setNegativeButtonTitle(@NonNull String buttonTitle) {
             super.setNegativeButtonTitle(buttonTitle);
             return this;
@@ -138,6 +149,7 @@ public abstract class InputDialog extends OkCancelDialog {
          * @param layoutResourceId 入力部分のレイアウトリソースID
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setLayoutResourceId(int layoutResourceId) {
             this.layoutResourceId = layoutResourceId;
             return this;
@@ -149,6 +161,7 @@ public abstract class InputDialog extends OkCancelDialog {
          * @param hint ヒント文言
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setHint(String hint) {
             this.hint = hint;
             return this;
@@ -160,6 +173,7 @@ public abstract class InputDialog extends OkCancelDialog {
          * @param inputType 入力種別
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setInputType(int inputType) {
             this.inputType = inputType;
             this.inputTypeIsSet = true;
@@ -172,6 +186,7 @@ public abstract class InputDialog extends OkCancelDialog {
          * @param maxLength 最大入力可能文字数
          * @return {@link Builder}
          */
+        @NonNull
         public Builder setMaxLength(int maxLength) {
             this.maxLength = maxLength;
             return this;
@@ -183,6 +198,7 @@ public abstract class InputDialog extends OkCancelDialog {
          * @return {@link DialogBase}
          */
         @Override
+        @NonNull
         protected DialogBase createFragment() {
             return new TextInputDialog();
         }
@@ -193,6 +209,7 @@ public abstract class InputDialog extends OkCancelDialog {
          * @return 引数を含んだ {@link Bundle}
          */
         @Override
+        @NonNull
         protected Bundle makeArguments() {
             final Bundle arguments = super.makeArguments();
 
