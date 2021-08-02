@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/DATA/Development/UYO/Android/ImoyaLib/dialog/lib/src/main/res/layout-v21/dialog_time_input.xml" value="0.20520833333333333" />
+        <entry key="..\:/DATA/Development/UYO/Android/ImoyaLib/dialog/lib/src/main/res/layout/dialog_multi_choise_and_button.xml" value="0.20520833333333333" />
+        <entry key="..\:/DATA/Development/UYO/Android/ImoyaLib/dialog/lib/src/main/res/layout/dialog_seekbar_input.xml" value="0.20520833333333333" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
