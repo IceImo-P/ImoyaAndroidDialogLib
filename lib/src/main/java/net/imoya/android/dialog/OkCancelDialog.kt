@@ -1,191 +1,143 @@
-package net.imoya.android.dialog;
+package net.imoya.android.dialog
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import android.app.Activity
+import android.app.Dialog
+import android.content.DialogInterface
+import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import net.imoya.android.dialog.OkCancelDialog.Builder
 
 /**
  * OKボタン、キャンセルボタンを持つダイアログ
- * <p/>
- * タイトル、メッセージ、OKボタン、キャンセルボタンを持つ、汎用ダイアログフラグメントです。<ul>
- * <li>親画面は {@link Listener} を実装した
- * {@link Fragment} 又は {@link AppCompatActivity} でなければなりません。</li>
- * <li>{@link Builder}を使用して表示内容を設定し、 {@link Builder#show()}
- * メソッドを呼び出して表示してください。</li>
- * <li>ダイアログ終了時 {@link Listener#onDialogResult(int, int, Intent)}
- * メソッドが呼び出されます。</li>
- * <li>OKボタンがクリックされた場合は、
- * {@link Listener#onDialogResult(int, int, Intent)} メソッドの引数 resultCode の値が
- * {@link Activity#RESULT_OK} となります。</li>
- * <li>キャンセルボタンがクリックされた場合、又はダイアログがキャンセル終了した場合は、
- * {@link Listener#onDialogResult(int, int, Intent)} メソッドの引数 resultCode の値が
- * {@link Activity#RESULT_CANCELED} となります。</li>
- * </ul>
+ *
+ * タイトル, メッセージ, OKボタン, キャンセルボタンを持つダイアログ [Fragment] です。
+ *  * 親画面は [DialogBase.Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
+ *  * [Builder]を使用して表示内容を設定し、 [Builder.show] メソッドをコールして表示してください。
+ *  * ダイアログ終了時 [DialogBase.Listener.onDialogResult] メソッドがコールされます。
+ *  * OKボタン押下に伴うダイアログ終了時、 [DialogBase.Listener.onDialogResult] メソッドの引数
+ *  resultCode の値が [Activity.RESULT_OK] となります。
+ *  * OKボタン押下以外の理由でダイアログが終了した場合は、
+ * [DialogBase.Listener.onDialogResult] メソッドの引数 resultCode の値が
+ * [Activity.RESULT_CANCELED] となります。
  */
-public class OkCancelDialog extends TwoButtonDialog {
+open class OkCancelDialog : TwoButtonDialog() {
     /**
      * ダイアログビルダ
      */
-    public static class Builder extends TwoButtonDialog.Builder {
-        /**
-         * コンストラクタ
-         *
-         * @param activity    親画面となる {@link AppCompatActivity}
-         * @param requestCode リクエストコード
-         * @param <T>         親画面は {@link Listener} を実装した {@link AppCompatActivity} であること
-         */
-        public <T extends AppCompatActivity & Listener> Builder(@NonNull T activity, int requestCode) {
-            super(activity, requestCode);
-        }
-
-        /**
-         * コンストラクタ
-         *
-         * @param fragment    親画面となる{@link Fragment}
-         * @param requestCode リクエストコード
-         * @param <T>         親画面は {@link Listener} を実装した {@link Fragment} であること
-         */
-        public <T extends Fragment & Listener> Builder(@NonNull T fragment, int requestCode) {
-            super(fragment, requestCode);
-        }
+    open class Builder(parent: BuilderParent, requestCode: Int) :
+        TwoButtonDialog.Builder(parent, requestCode) {
 
         /**
          * タイトル文言を設定します。
          *
          * @param title タイトル文言
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setTitle(@NonNull String title) {
-            super.setTitle(title);
-            return this;
+        override fun setTitle(title: String): Builder {
+            super.setTitle(title)
+            return this
         }
 
         /**
          * メッセージ文言を設定します。
          *
          * @param message メッセージ文言
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setMessage(@NonNull String message) {
-            super.setMessage(message);
-            return this;
+        override fun setMessage(message: String): Builder {
+            super.setMessage(message)
+            return this
         }
 
         /**
          * インスタンス識別用タグを設定します。
          *
          * @param tag タグ
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setTag(@NonNull String tag) {
-            super.setTag(tag);
-            return this;
+        override fun setTag(tag: String): Builder {
+            super.setTag(tag)
+            return this
         }
 
         /**
-         * OKボタン文言を設定します。デフォルト値は {@link android.R.string#ok } です。
+         * OKボタン文言を設定します。デフォルト値は [android.R.string.ok] です。
          *
          * @param buttonTitle ボタン文言
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setPositiveButtonTitle(@NonNull String buttonTitle) {
-            super.setPositiveButtonTitle(buttonTitle);
-            return this;
+        override fun setPositiveButtonTitle(buttonTitle: String): Builder {
+            super.setPositiveButtonTitle(buttonTitle)
+            return this
         }
 
         /**
-         * キャンセルボタン文言を設定します。デフォルト値は {@link android.R.string#cancel } です。
+         * キャンセルボタン文言を設定します。デフォルト値は [android.R.string.cancel] です。
          *
          * @param buttonTitle ボタン文言
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setNegativeButtonTitle(@NonNull String buttonTitle) {
-            super.setNegativeButtonTitle(buttonTitle);
-            return this;
+        override fun setNegativeButtonTitle(buttonTitle: String): Builder {
+            super.setNegativeButtonTitle(buttonTitle)
+            return this
         }
 
         /**
          * 実装クラスのインスタンスを生成して返します。
          *
-         * @return {@link DialogBase}
+         * @return [DialogBase]
          */
-        @Override
-        @NonNull
-        protected DialogBase createFragment() {
-            return new OkCancelDialog();
+        override fun createFragment(): DialogBase {
+            return OkCancelDialog()
         }
     }
 
     /**
      * ボタンクリックリスナの実装
      */
-    protected static class DialogButtonClickListener extends DialogItemClickListener {
-        /**
-         * コンストラクタ
-         *
-         * @param dialog   ダイアログ
-         * @param listener ダイアログのリスナ
-         */
-        protected DialogButtonClickListener(OkCancelDialog dialog, Listener listener) {
-            super(dialog, listener);
-        }
-
+    protected open class DialogButtonClickListener(dialog: OkCancelDialog, listener: Listener) :
+        DialogItemClickListener(dialog, listener) {
         /**
          * 親画面へ通知する結果コードを返します。
          *
          * @param which クリックされたボタンの位置
          * @return 結果コード
          */
-        private int getResultCode(int which) {
-            return (which == AlertDialog.BUTTON_POSITIVE
-                    ? Activity.RESULT_OK : Activity.RESULT_CANCELED);
+        private fun getResultCode(which: Int): Int {
+            return if (which == AlertDialog.BUTTON_POSITIVE) Activity.RESULT_OK else Activity.RESULT_CANCELED
         }
 
         /**
          * ダイアログリスナへ、ボタンクリックを通知します。
          *
-         * @param dialogInterface {@link DialogInterface}
+         * @param dialogInterface [DialogInterface]
          * @param which           クリックされたボタンの位置
          */
-        @Override
-        protected void callListener(@NonNull DialogInterface dialogInterface, int which) {
-            this.listener.onDialogResult(
-                    this.dialog.getRequestCode(), this.getResultCode(which), this.makeData());
+        override fun callListener(dialogInterface: DialogInterface, which: Int) {
+            listener.onDialogResult(
+                dialog.requestCode, getResultCode(which), makeData()
+            )
         }
     }
 
-    // private static final String TAG = "OkCancelDialog";
-
-    @NonNull
-    @Override
-    public Dialog createDialog(Bundle savedInstanceState) {
-        final DialogButtonClickListener buttonClickListener = new DialogButtonClickListener(
-                this, this.listener);
-        final Bundle arguments = this.requireArguments();
-        return new AlertDialog.Builder(this.requireActivity(), this.getTheme())
-                .setTitle(arguments.getString(KEY_TITLE))
-                .setMessage(arguments.getString(KEY_MESSAGE))
-                .setPositiveButton(
-                        arguments.getString(KEY_POSITIVE_BUTTON_TITLE), buttonClickListener)
-                .setNegativeButton(
-                        arguments.getString(KEY_NEGATIVE_BUTTON_TITLE), buttonClickListener)
-                .create();
+    override fun createDialog(savedInstanceState: Bundle?): Dialog {
+        val buttonClickListener = DialogButtonClickListener(this, listener)
+        val arguments = requireArguments()
+        return AlertDialog.Builder(requireActivity(), this.theme)
+            .setTitle(arguments.getString(KEY_TITLE))
+            .setMessage(arguments.getString(KEY_MESSAGE))
+            .setPositiveButton(
+                arguments.getString(KEY_POSITIVE_BUTTON_TITLE), buttonClickListener
+            )
+            .setNegativeButton(
+                arguments.getString(KEY_NEGATIVE_BUTTON_TITLE), buttonClickListener
+            )
+            .create()
     }
+
+//    companion object {
+//        private const val TAG = "OkCancelDialog"
+//    }
 }

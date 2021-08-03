@@ -1,99 +1,78 @@
-package net.imoya.android.dialog;
+package net.imoya.android.dialog
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Intent;
-import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import android.app.Activity
+import android.app.Dialog
+import android.content.DialogInterface
+import android.content.Intent
+import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import net.imoya.android.dialog.MultiChoiceDialog.Builder
 
 /**
  * 複数項目選択ダイアログ
- * <p/>
- * タイトル、複数選択リスト、OKボタン、キャンセルボタンを持つ、
- * 汎用ダイアログフラグメントです。<ul>
- * <li>親画面は {@link Listener} を実装した
- * {@link Fragment} 又は {@link AppCompatActivity} でなければなりません。</li>
- * <li>{@link Builder}を使用して表示内容を設定し、 {@link Builder#show()}
- * メソッドを呼び出して表示してください。</li>
- * <li>ダイアログ終了時 {@link Listener#onDialogResult(int, int, Intent)}
- * メソッドが呼び出されます。</li>
- * <li>OKボタンがクリックされた場合は、
- * {@link Listener#onDialogResult(int, int, Intent)} メソッドの引数 resultCode の値が
- * {@link Activity#RESULT_OK} となります。このとき、引数 data の
- * {@link Intent#getBooleanArrayExtra(String)} へ {@link #EXTRA_KEY_CHECKED_LIST}
- * を入力することで、全項目の選択状態リストを取得できます。</li>
- * <li>キャンセルボタンがクリックされた場合、又はダイアログがキャンセル終了した場合は、
- * {@link Listener#onDialogResult(int, int, Intent)} メソッドの引数 resultCode の値が
- * {@link Activity#RESULT_CANCELED} となります。</li>
- * </ul>
+ *
+ * タイトル, 複数選択リスト, OKボタン, キャンセルボタンを持つダイアログ [Fragment] です。
+ *  * 親画面は [DialogBase.Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
+ *  * [Builder]を使用して表示内容を設定し、 [Builder.show] メソッドをコールして表示してください。
+ *  * ダイアログ終了時 [DialogBase.Listener.onDialogResult] メソッドがコールされます。
+ *  * OKボタン押下に伴うダイアログ終了時、 [DialogBase.Listener.onDialogResult] メソッドの引数
+ *  resultCode の値が [Activity.RESULT_OK] となります。このとき、引数 data の
+ * [Intent.getBooleanArrayExtra] へ [MultiChoiceDialogBase.EXTRA_KEY_CHECKED_LIST]
+ * を入力することで、全項目の選択状態リストを取得できます。
+ *  * OKボタン押下以外の理由でダイアログが終了した場合は、
+ * [DialogBase.Listener.onDialogResult] メソッドの引数 resultCode の値が
+ * [Activity.RESULT_CANCELED] となります。
  */
-@SuppressWarnings("unused")
-public class MultiChoiceDialog extends MultiChoiceDialogBase {
+@Suppress("unused")
+class MultiChoiceDialog : MultiChoiceDialogBase() {
     /**
      * ダイアログビルダ
      */
-    public static class Builder extends MultiChoiceDialogBase.Builder {
-        /**
-         * コンストラクタ
-         *
-         * @param activity    親画面となる {@link AppCompatActivity}
-         * @param requestCode リクエストコード
-         * @param <T>         親画面は {@link Listener} を実装した {@link AppCompatActivity} であること
-         */
-        public <T extends AppCompatActivity & Listener> Builder(
-                @NonNull T activity, int requestCode) {
-            super(activity, requestCode);
-        }
-
-        /**
-         * コンストラクタ
-         *
-         * @param fragment    親画面となる{@link Fragment}
-         * @param requestCode リクエストコード
-         */
-        public <T extends Fragment & Listener> Builder(@NonNull T fragment, int requestCode) {
-            super(fragment, requestCode);
-        }
-
+    class Builder(parent: BuilderParent, requestCode: Int) :
+        MultiChoiceDialogBase.Builder(parent, requestCode) {
         /**
          * 実装クラスのインスタンスを生成して返します。
          *
-         * @return {@link DialogBase}
+         * @return [DialogBase]
          */
-        @Override
-        @NonNull
-        protected DialogBase createFragment() {
-            return new MultiChoiceDialog();
+        override fun createFragment(): DialogBase {
+            return MultiChoiceDialog()
         }
     }
-
-//    private static final String TAG = "MultiChoiceDialog";
 
     /**
      * ダイアログ生成処理
      *
      * @param savedInstanceState 前回強制終了時の保存データ
-     * @return 生成した{@link Dialog}
+     * @return 生成した [Dialog]
      */
-    @NonNull
-    @Override
-    public Dialog createDialog(@NonNull Bundle savedInstanceState) {
-        final Bundle arguments = this.requireArguments();
-        return new AlertDialog.Builder(this.requireContext(), this.getTheme())
-                .setTitle(arguments.getString(KEY_TITLE))
-                .setMessage(arguments.getString(KEY_MESSAGE))
-                .setMultiChoiceItems(this.items, this.checkedList,
-                        (dialog, which, isChecked) -> this.checkedList[which] = isChecked)
-                .setPositiveButton(
-                        arguments.getString(KEY_POSITIVE_BUTTON_TITLE),
-                        new DialogButtonClickListener(this, this.listener))
-                .setNegativeButton(
-                        arguments.getString(KEY_NEGATIVE_BUTTON_TITLE),
-                        new DialogButtonClickListener(this, this.listener))
-                .create();
+    override fun createDialog(savedInstanceState: Bundle?): Dialog {
+        val arguments = requireArguments()
+        return AlertDialog.Builder(requireContext(), this.theme)
+            .setTitle(arguments.getString(KEY_TITLE))
+            .setMessage(arguments.getString(KEY_MESSAGE))
+            .setMultiChoiceItems(
+                items, checkedList
+            ) { _: DialogInterface?, which: Int, isChecked: Boolean ->
+                checkedList[which] = isChecked
+            }
+            .setPositiveButton(
+                arguments.getString(KEY_POSITIVE_BUTTON_TITLE),
+                DialogButtonClickListener(this, listener)
+            )
+            .setNegativeButton(
+                arguments.getString(KEY_NEGATIVE_BUTTON_TITLE),
+                DialogButtonClickListener(this, listener)
+            )
+            .create()
     }
+
+//    companion object {
+//        /**
+//         * Tag for log
+//         */
+//        private const val TAG = "MultiChoiceDialog"
+//    }
 }

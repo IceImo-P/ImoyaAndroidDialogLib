@@ -15,16 +15,15 @@ import net.imoya.android.dialog.DialogBase.Listener
 import net.imoya.android.util.Log
 
 /**
- * ダイアログフラグメントの abstract
+ * ダイアログ [Fragment] の abstract
  *
- * 汎用ダイアログフラグメントの abstract です。
+ * 本ライブラリが提供する全ダイアログ [Fragment] の基底クラスです。
  *  * 親画面は [Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
+ *  [BuilderParent] の実装クラスを独自に作成することにより、他のクラスを親画面とすることも可能です。
  *  * [Builder] を継承したクラスを使用して表示内容を設定し、[Builder.show] メソッドをコールして表示してください。
  *  * ダイアログ終了時 [Listener.onDialogResult] メソッドがコールされます。
- *  * ダイアログがキャンセル終了した場合、
- * [Listener.onDialogResult] メソッドの引数 resultCode の値が
- * [Activity.RESULT_CANCELED] となります。
- *
+ *  * ダイアログがキャンセル終了した場合、 [Listener.onDialogResult] メソッドの引数 resultCode の値が
+ *  [Activity.RESULT_CANCELED] となります。
  */
 @Suppress("unused")
 abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelListener {
@@ -227,7 +226,7 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
         /**
          * ダイアログを表示します。
          */
-        protected open fun show() {
+        open fun show() {
             val fragment = createFragment()
             fragment.arguments = makeArguments()
             fragment.listener = parent.listener
@@ -259,9 +258,7 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
         protected var which = 0
 
         /**
-         * ボタン押下時に [Fragment.onActivityResult] 又は
-         * [Listener.onDialogResult] へ通知する
-         * [Intent] を生成して返します。
+         * ボタン押下時に [Listener.onDialogResult] へ入力する [Intent] を生成して返します。
          *
          * @return [Intent]
          */
@@ -307,8 +304,7 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
     /**
      * リスナ
      */
-    @JvmField
-    protected var listener: Listener? = null
+    protected lateinit var listener: Listener
 
     /**
      * リクエストコードを取得します。
@@ -349,7 +345,7 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
      * ダイアログ生成処理
      *
      * @param savedInstanceState 前回強制終了時の保存データ
-     * @return 生成した{@link Dialog}
+     * @return 生成した [Dialog]
      */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val arguments = requireArguments()
@@ -364,7 +360,7 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
      * ダイアログ生成処理
      *
      * @param savedInstanceState 前回強制終了時の保存データ
-     * @return 生成した{@link Dialog}
+     * @return 生成した [Dialog]
      */
     protected abstract fun createDialog(savedInstanceState: Bundle?): Dialog
 
@@ -388,8 +384,8 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
      */
     @Suppress("MemberVisibilityCanBePrivate")
     protected fun callCancelListener() {
-        if (listener != null) {
-            listener!!.onDialogResult(requestCode, Activity.RESULT_CANCELED, null)
+        if (::listener.isInitialized) {
+            listener.onDialogResult(requestCode, Activity.RESULT_CANCELED, null)
         }
     }
 
@@ -407,32 +403,32 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
         /**
          * ダイアログ引数キー:リクエストコード
          */
-        protected const val KEY_REQUEST_CODE = "requestCode"
+        /* protected */ const val KEY_REQUEST_CODE = "requestCode"
 
         /**
          * ダイアログ引数キー:タイトル
          */
-        protected const val KEY_TITLE = "title"
+        /* protected */ const val KEY_TITLE = "title"
 
         /**
          * ダイアログ引数キー:メッセージ
          */
-        protected const val KEY_MESSAGE = "message"
+        /* protected */ const val KEY_MESSAGE = "message"
 
         /**
          * ダイアログ引数キー:カスタムビューのレイアウトリソースID
          */
-        protected const val KEY_LAYOUT_RESOURCE_ID = "layoutResourceId"
+        /* protected */ const val KEY_LAYOUT_RESOURCE_ID = "layoutResourceId"
 
         /**
          * ダイアログ引数キー:キャンセル可能フラグ
          */
-        protected const val KEY_CANCELABLE = "cancelable"
+        /* protected */ const val KEY_CANCELABLE = "cancelable"
 
         /**
          * ダイアログ引数キー:ダイアログ外クリック時キャンセル実行フラグ
          */
-        protected const val KEY_CANCELED_ON_TOUCH_OUTSIDE = "canceledOnTouchOutside"
+        /* protected */ const val KEY_CANCELED_ON_TOUCH_OUTSIDE = "canceledOnTouchOutside"
 
         /**
          * Tag for log

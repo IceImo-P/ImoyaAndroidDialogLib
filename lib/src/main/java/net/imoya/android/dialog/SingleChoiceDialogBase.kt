@@ -1,284 +1,224 @@
-package net.imoya.android.dialog;
+package net.imoya.android.dialog
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
-import net.imoya.android.util.Log;
-
-import java.util.Arrays;
+import android.app.Activity
+import android.os.Bundle
+import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import net.imoya.android.util.Log
+import java.lang.IllegalArgumentException
+import java.lang.NullPointerException
+import java.util.*
 
 /**
  * 単一項目選択ダイアログの abstract
- * <p/>
- * タイトル、単一選択リスト、OKボタン、キャンセルボタンを持つ、
- * 汎用ダイアログフラグメントの abstract です。<ul>
- * <li>親画面は {@link Listener} を実装した {@link Fragment} 又は {@link AppCompatActivity}
- * でなければなりません。</li>
- * <li>{@link Builder}を使用して表示内容を設定し、 {@link Builder#show()}
- * メソッドを呼び出して表示してください。</li>
- * <li>ダイアログ終了時 {@link Listener#onDialogResult(int, int, Intent)}
- * メソッドが呼び出されます。</li>
- * <li>OKボタンがクリックされた場合は、
- * {@link Listener#onDialogResult(int, int, Intent)} メソッドの引数 resultCode の値が
- * {@link Activity#RESULT_OK} となります。このとき、引数 data の
- * {@link Intent#getIntExtra(String, int)} へ {@link #EXTRA_KEY_WHICH}
- * を入力することで、選択された項目の位置(又は、未選択を表す-1)を取得できます。</li>
- * <li>キャンセルボタンがクリックされた場合、又はダイアログがキャンセル終了した場合は、
- * {@link Listener#onDialogResult(int, int, Intent)} メソッドの引数 resultCode の値が
- * {@link Activity#RESULT_CANCELED} となります。</li>
- * </ul>
+ *
+ * タイトル, 単一選択リスト, OKボタン, キャンセルボタンを持つダイアログ [Fragment] の abstract です。
+ *  * 親画面は [DialogBase.Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
+ *  * [Builder]を使用して表示内容を設定し、 [Builder.show] メソッドをコールして表示してください。
+ *  * ダイアログ終了時 [DialogBase.Listener.onDialogResult] メソッドがコールされます。
+ *  * OKボタン押下に伴うダイアログ終了時、 [DialogBase.Listener.onDialogResult] メソッドの引数
+ *  resultCode の値が [Activity.RESULT_OK] となります。このとき、引数 data の [Intent.getIntExtra] へ
+ *  [DialogBase.EXTRA_KEY_WHICH] を入力することで、選択された項目の位置(又は未選択を表す -1)を取得できます。
+ *  * OKボタン押下以外の理由でダイアログが終了した場合は、
+ * [DialogBase.Listener.onDialogResult] メソッドの引数 resultCode の値が
+ * [Activity.RESULT_CANCELED] となります。
  */
-@SuppressWarnings("unused")
-public abstract class SingleChoiceDialogBase extends OkCancelDialog {
+abstract class SingleChoiceDialogBase : OkCancelDialog() {
     /**
      * ダイアログビルダ
      */
-    public abstract static class Builder extends OkCancelDialog.Builder {
+    abstract class Builder
+    /**
+     * コンストラクタ
+     *
+     * @param parent    親画面となる [AppCompatActivity]
+     * @param requestCode リクエストコード
+     */
+        (
+        parent: BuilderParent, requestCode: Int
+    ) : OkCancelDialog.Builder(parent, requestCode) {
         /**
          * 選択項目リスト
          */
-        private String[] items = null;
+        private var items: Array<String>? = null
+
         /**
          * 初期選択位置
          */
-        private int selectedPosition = -1;
-
-        /**
-         * コンストラクタ
-         *
-         * @param activity    親画面となる {@link AppCompatActivity}
-         * @param requestCode リクエストコード
-         * @param <T>         親画面は {@link Listener} を実装した {@link AppCompatActivity} であること
-         */
-        public <T extends AppCompatActivity & Listener> Builder(
-                @NonNull T activity, int requestCode) {
-            super(activity, requestCode);
-        }
-
-        /**
-         * コンストラクタ
-         *
-         * @param fragment    親画面となる{@link Fragment}
-         * @param requestCode リクエストコード
-         * @param <T>         親画面は {@link Listener} を実装した {@link Fragment} であること
-         */
-        public <T extends Fragment & Listener> Builder(@NonNull T fragment, int requestCode) {
-            super(fragment, requestCode);
-        }
+        private var selectedPosition = -1
 
         /**
          * タイトル文言を設定します。
          *
          * @param title タイトル文言
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setTitle(@NonNull String title) {
-            super.setTitle(title);
-            return this;
+        override fun setTitle(title: String): Builder {
+            super.setTitle(title)
+            return this
         }
 
         /**
          * このメソッドは使用できません。
          *
          * @param message メッセージ文言
-         * @return {@link Builder}
+         * @return [Builder]
          * @throws IllegalArgumentException このメソッドが呼び出されました。
          */
-        @Override
-        @NonNull
-        public Builder setMessage(@NonNull String message) {
-            throw new IllegalArgumentException(
-                    "Don't use setMessage for StringArrayDialog. Use setTitle() instead.");
+        override fun setMessage(message: String): Builder {
+            throw IllegalArgumentException(
+                "Don't use setMessage for StringArrayDialog. Use setTitle() instead."
+            )
         }
 
         /**
          * インスタンス識別用タグを設定します。
          *
          * @param tag タグ
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setTag(@NonNull String tag) {
-            super.setTag(tag);
-            return this;
+        override fun setTag(tag: String): Builder {
+            super.setTag(tag)
+            return this
         }
 
         /**
-         * OKボタン文言を設定します。デフォルト値は {@link android.R.string#ok } です。
+         * OKボタン文言を設定します。デフォルト値は [android.R.string.ok] です。
          *
          * @param buttonTitle ボタン文言
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setPositiveButtonTitle(@NonNull String buttonTitle) {
-            super.setPositiveButtonTitle(buttonTitle);
-            return this;
+        override fun setPositiveButtonTitle(buttonTitle: String): Builder {
+            super.setPositiveButtonTitle(buttonTitle)
+            return this
         }
 
         /**
-         * キャンセルボタン文言を設定します。デフォルト値は {@link android.R.string#cancel } です。
+         * キャンセルボタン文言を設定します。デフォルト値は [android.R.string.cancel] です。
          *
          * @param buttonTitle ボタン文言
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setNegativeButtonTitle(@NonNull String buttonTitle) {
-            super.setNegativeButtonTitle(buttonTitle);
-            return this;
+        override fun setNegativeButtonTitle(buttonTitle: String): Builder {
+            super.setNegativeButtonTitle(buttonTitle)
+            return this
         }
 
         /**
          * 選択項目リストを設定します。
          *
          * @param items 選択項目リスト
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @NonNull
-        public Builder setItems(String[] items) {
-            this.items = items;
-            return this;
+        open fun setItems(items: Array<String>?): Builder {
+            this.items = items
+            return this
         }
 
         /**
          * 初期選択位置を設定します。
          *
          * @param selectedPosition 初期選択位置、又は未選択状態を指定する -1
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @NonNull
-        public Builder setSelectedPosition(int selectedPosition) {
-            this.selectedPosition = selectedPosition;
-            return this;
+        open fun setSelectedPosition(selectedPosition: Int): Builder {
+            this.selectedPosition = selectedPosition
+            return this
         }
 
         /**
          * ダイアログへ渡す引数を生成して返します。
          *
-         * @return 引数を含んだ {@link Bundle}
+         * @return 引数を含んだ [Bundle]
          */
-        @Override
-        @NonNull
-        protected Bundle makeArguments() {
-            final Bundle arguments = super.makeArguments();
-
-            arguments.putStringArray(KEY_ITEMS, this.items);
-            arguments.putInt(EXTRA_KEY_WHICH, this.selectedPosition);
-
-            return arguments;
+        override fun makeArguments(): Bundle {
+            val arguments = super.makeArguments()
+            arguments.putStringArray(KEY_ITEMS, items)
+            arguments.putInt(EXTRA_KEY_WHICH, selectedPosition)
+            return arguments
         }
     }
 
     /**
      * ボタンクリックリスナの実装
      */
-    protected static class DialogButtonClickListener
-            extends OkCancelDialog.DialogButtonClickListener {
+    protected class DialogButtonClickListener(dialog: SingleChoiceDialogBase, listener: Listener) :
+        OkCancelDialog.DialogButtonClickListener(dialog, listener) {
         /**
-         * コンストラクタ
+         * ボタン押下時に [DialogBase.Listener.onDialogResult] へ入力する [Intent] を生成して返します。
          *
-         * @param dialog   ダイアログ
-         * @param listener ダイアログのリスナ
+         * @return [Intent]
          */
-        protected DialogButtonClickListener(SingleChoiceDialogBase dialog, Listener listener) {
-            super(dialog, listener);
-        }
-
-        /**
-         * ボタン押下時に {@link Fragment#onActivityResult(int, int, Intent)} 又は
-         * {@link Listener#onDialogResult(int, int, Intent)} へ通知する
-         * {@link Intent} を生成して返します。
-         *
-         * @return {@link Intent}
-         */
-        @Override
-        @NonNull
-        protected Intent makeData() {
-            final Intent data = super.makeData();
+        override fun makeData(): Intent {
+            val data = super.makeData()
             data.putExtra(
-                    EXTRA_KEY_WHICH, ((SingleChoiceDialogBase) this.dialog).selectedPosition);
-            return data;
+                EXTRA_KEY_WHICH, (dialog as SingleChoiceDialogBase).selectedPosition
+            )
+            return data
         }
     }
-
-    /**
-     * ダイアログ引数キー:選択項目リスト
-     */
-    protected static final String KEY_ITEMS = "items";
-
-    private static final String TAG = "SingleChoiceDialogBase";
 
     /**
      * 選択項目リスト
      */
-    protected String[] items = null;
+    protected lateinit var items: Array<String>
+
     /**
      * 現在の選択位置
      */
-    protected int selectedPosition = -1;
+    @JvmField
+    protected var selectedPosition = -1
 
     /**
-     * 現在の選択位置を取得します。
-     *
-     * @return 現在の選択位置、又は未選択状態を表す -1
-     */
-    public int getSelectedPosition() {
-        return this.selectedPosition;
-    }
-
-    /**
-     * {@link Fragment} 生成時の処理
+     * [Fragment] 生成時の処理
      *
      * @param savedInstanceState 再生成前に保存された情報
      */
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        final Bundle arguments = this.requireArguments();
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val arguments = requireArguments()
 
         // 選択項目リストを、ダイアログ引数より取得する
-        final String[] tmpItems = arguments.getStringArray(KEY_ITEMS);
-        if (tmpItems == null) {
-            // 必ず指定しなければならない
-            throw new NullPointerException("items == null");
-        }
+        val tmpItems = arguments.getStringArray(KEY_ITEMS)
+            ?: // 必ず指定しなければならない
+            throw NullPointerException("items == null")
         // 参照する引数の変化を防ぐため、必ずcloneする
-        this.items = tmpItems.clone();
+        items = tmpItems.clone()
 
         // 生成時の選択位置を、ダイアログ引数又は再生成前の保存情報より取得する
-        this.selectedPosition = (savedInstanceState != null
-                ? savedInstanceState.getInt(EXTRA_KEY_WHICH)
-                : arguments.getInt(EXTRA_KEY_WHICH));
-        if (this.selectedPosition < -1 || this.selectedPosition >= this.items.length) {
+        selectedPosition = savedInstanceState?.getInt(EXTRA_KEY_WHICH)
+            ?: arguments.getInt(EXTRA_KEY_WHICH, -1)
+        if (selectedPosition < -1 || selectedPosition >= items.size) {
             // 異常値の場合は、未選択とする
-            Log.w(TAG, "onCreate: Illegal position(" + this.selectedPosition + ")");
-            this.selectedPosition = -1;
+            Log.w(TAG, "onCreate: Illegal position($selectedPosition)")
+            selectedPosition = -1
         }
-
-        Log.d(TAG, "onCreate: items = " + Arrays.asList(items)
-                + ", selectedPosition = " + this.selectedPosition);
+        Log.d(
+            TAG, "onCreate: items = " + Arrays.asList(*items)
+                    + ", selectedPosition = " + selectedPosition
+        )
     }
 
     /**
-     * {@link Fragment} 再生成前の状態保存処理
+     * [Fragment] 再生成前の状態保存処理
      *
      * @param outState 保存先
      */
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(EXTRA_KEY_WHICH, selectedPosition)
+    }
 
-        outState.putInt(EXTRA_KEY_WHICH, this.selectedPosition);
+    companion object {
+        /**
+         * ダイアログ引数キー:選択項目リスト
+         */
+        /* protected */ const val KEY_ITEMS = "items"
+
+        /**
+         * Tag for log
+         */
+        private const val TAG = "SingleChoiceDialogBase"
     }
 }

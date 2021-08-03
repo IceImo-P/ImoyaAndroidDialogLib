@@ -1,271 +1,230 @@
-package net.imoya.android.dialog;
+package net.imoya.android.dialog
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import android.app.Activity
+import android.app.Dialog
+import android.content.Intent
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.Button
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import net.imoya.android.dialog.SingleChoiceAndButtonDialogBase.Builder
 
 /**
  * 追加ボタン付き単一項目選択ダイアログの abstract
- * <p/>
- * タイトル、単一選択リスト、追加ボタン、OKボタン、キャンセルボタンを持つ、
- * 汎用ダイアログフラグメントの abstract です。<ul>
- * <li>親画面は {@link Listener} を実装した {@link Fragment} 又は {@link AppCompatActivity}
- * でなければなりません。</li>
- * <li>{@link Builder}を使用して表示内容を設定し、 {@link Builder#show()}
- * メソッドを呼び出して表示してください。</li>
- * <li>ダイアログ終了時 {@link Listener#onDialogResult(int, int, Intent)}
- * メソッドが呼び出されます。</li>
- * <li>OKボタンがクリックされた場合は、
- * {@link Listener#onDialogResult(int, int, Intent)} メソッドの引数 resultCode の値が
- * {@link Activity#RESULT_OK} となります。このとき、引数 data の
- * {@link Intent#getIntExtra(String, int)} へ {@link #EXTRA_KEY_WHICH}
- * を入力することで、選択された項目の位置(又は、未選択を表す-1)を取得できます。</li>
- * <li>キャンセルボタンがクリックされた場合、又はダイアログがキャンセル終了した場合は、
- * {@link Listener#onDialogResult(int, int, Intent)} メソッドの引数 resultCode の値が
- * {@link Activity#RESULT_CANCELED} となります。</li>
- * <li>追加ボタンクリック時の処理は、このクラスの派生クラスを作成し、
- * {@link #onClickAdditionalButton()} メソッドを override して実装してください。</li>
- * </ul>
+ *
+ * タイトル, 単一選択リスト, 追加ボタン, OKボタン, キャンセルボタンを持つダイアログ [Fragment] の abstract です。
+ *  * 親画面は [DialogBase.Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
+ *  * [Builder]を使用して表示内容を設定し、 [Builder.show] メソッドをコールして表示してください。
+ *  * ダイアログ終了時 [DialogBase.Listener.onDialogResult] メソッドがコールされます。
+ *  * OKボタン押下に伴うダイアログ終了時、 [DialogBase.Listener.onDialogResult] メソッドの引数
+ *  resultCode の値が [Activity.RESULT_OK] となります。このとき、引数 data の [Intent.getIntExtra] へ
+ * [DialogBase.EXTRA_KEY_WHICH] を入力することで、選択された項目の位置(又は、未選択を表す -1)を取得できます。
+ *  * OKボタン押下以外の理由でダイアログが終了した場合は、
+ * [DialogBase.Listener.onDialogResult] メソッドの引数 resultCode の値が
+ * [Activity.RESULT_CANCELED] となります。
+ *  * 追加ボタンクリック時の処理は、このクラスの派生クラスを作成し、
+ * [SingleChoiceAndButtonDialogBase.onClickAdditionalButton] メソッドを override して実装してください。
  */
-@SuppressWarnings("unused")
-public abstract class SingleChoiceAndButtonDialogBase extends SingleChoiceDialogBase
-        implements RadioGroup.OnCheckedChangeListener, View.OnClickListener {
+@Suppress("unused")
+abstract class SingleChoiceAndButtonDialogBase : SingleChoiceDialogBase(),
+    RadioGroup.OnCheckedChangeListener, View.OnClickListener {
     /**
      * ダイアログビルダ
      */
-    public static class Builder extends SingleChoiceDialogBase.Builder {
+    open class Builder(parent: BuilderParent, requestCode: Int) :
+        SingleChoiceDialogBase.Builder(parent, requestCode) {
         /**
          * 追加ボタン文言
          */
-        private String additionalButtonText;
-
-        /**
-         * コンストラクタ
-         *
-         * @param activity    親画面となる {@link AppCompatActivity}
-         * @param requestCode リクエストコード
-         * @param <T>         親画面は {@link Listener} を実装した {@link AppCompatActivity} であること
-         */
-        public <T extends AppCompatActivity & Listener> Builder(
-                @NonNull T activity, int requestCode) {
-            super(activity, requestCode);
-        }
-
-        /**
-         * コンストラクタ
-         *
-         * @param fragment    親画面となる{@link Fragment}
-         * @param requestCode リクエストコード
-         */
-        public <T extends Fragment & Listener> Builder(@NonNull T fragment, int requestCode) {
-            super(fragment, requestCode);
-        }
+        @JvmField
+        protected var additionalButtonText: String? = null
 
         /**
          * タイトル文言を設定します。
          *
          * @param title タイトル文言
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setTitle(@NonNull String title) {
-            super.setTitle(title);
-            return this;
+        override fun setTitle(title: String): Builder {
+            super.setTitle(title)
+            return this
         }
 
         /**
          * このメソッドは使用できません。
          *
          * @param message メッセージ文言
-         * @return {@link Builder}
+         * @return [Builder]
          * @throws IllegalArgumentException このメソッドが呼び出されました。
          */
-        @Override
-        @NonNull
-        public Builder setMessage(@NonNull String message) {
-            throw new IllegalArgumentException(
-                    "Don't use setMessage for StringArrayDialog. Use setTitle() instead.");
+        override fun setMessage(message: String): Builder {
+            throw IllegalArgumentException(
+                "Don't use setMessage for StringArrayDialog. Use setTitle() instead."
+            )
         }
 
         /**
          * インスタンス識別用タグを設定します。
          *
          * @param tag タグ
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setTag(@NonNull String tag) {
-            super.setTag(tag);
-            return this;
+        override fun setTag(tag: String): Builder {
+            super.setTag(tag)
+            return this
         }
 
         /**
-         * OKボタン文言を設定します。デフォルト値は {@link android.R.string#ok } です。
+         * OKボタン文言を設定します。デフォルト値は [android.R.string.ok] です。
          *
          * @param buttonTitle ボタン文言
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setPositiveButtonTitle(@NonNull String buttonTitle) {
-            super.setPositiveButtonTitle(buttonTitle);
-            return this;
+        override fun setPositiveButtonTitle(buttonTitle: String): Builder {
+            super.setPositiveButtonTitle(buttonTitle)
+            return this
         }
 
         /**
-         * キャンセルボタン文言を設定します。デフォルト値は {@link android.R.string#cancel } です。
+         * キャンセルボタン文言を設定します。デフォルト値は [android.R.string.cancel] です。
          *
          * @param buttonTitle ボタン文言
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setNegativeButtonTitle(@NonNull String buttonTitle) {
-            super.setNegativeButtonTitle(buttonTitle);
-            return this;
+        override fun setNegativeButtonTitle(buttonTitle: String): Builder {
+            super.setNegativeButtonTitle(buttonTitle)
+            return this
         }
 
         /**
          * 選択項目リストを設定します。
          *
          * @param items 選択項目リスト
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @NonNull
-        public Builder setItems(String[] items) {
-            super.setItems(items);
-            return this;
+        override fun setItems(items: Array<String>?): Builder {
+            super.setItems(items)
+            return this
         }
 
         /**
          * 初期選択位置を設定します。
          *
          * @param selectedPosition 初期選択位置、又は未選択状態を指定する -1
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @NonNull
-        public Builder setSelectedPosition(int selectedPosition) {
-            super.setSelectedPosition(selectedPosition);
-            return this;
+        override fun setSelectedPosition(selectedPosition: Int): Builder {
+            super.setSelectedPosition(selectedPosition)
+            return this
         }
 
         /**
          * 追加ボタン文言を設定します。
          *
          * @param additionalButtonText 追加ボタン文言
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @NonNull
-        public Builder setAdditionalButtonText(String additionalButtonText) {
-            this.additionalButtonText = additionalButtonText;
-            return this;
+        fun setAdditionalButtonText(additionalButtonText: String?): Builder {
+            this.additionalButtonText = additionalButtonText
+            return this
         }
 
         /**
          * ダイアログへ渡す引数を生成して返します。
          *
-         * @return 引数を含んだ {@link Bundle}
+         * @return 引数を含んだ [Bundle]
          */
-        @Override
-        @NonNull
-        protected Bundle makeArguments() {
-            final Bundle arguments = super.makeArguments();
-
-            arguments.putString(KEY_ADDITIONAL_BUTTON_TEXT, this.additionalButtonText);
-
-            return arguments;
+        override fun makeArguments(): Bundle {
+            val arguments = super.makeArguments()
+            arguments.putString(KEY_ADDITIONAL_BUTTON_TEXT, additionalButtonText)
+            return arguments
         }
     }
-
-    /**
-     * ダイアログ引数キー:追加ボタン文言
-     */
-    private static final String KEY_ADDITIONAL_BUTTON_TEXT = "additionalButtonText";
-
-//    private static final String TAG = "SingleChoiceAndButtonDialogBase";
 
     /**
      * ダイアログ生成処理
      *
      * @param savedInstanceState 前回強制終了時の保存データ
-     * @return 生成した{@link Dialog}
+     * @return 生成した [Dialog]
      */
-    @NonNull
-    @Override
-    public Dialog createDialog(Bundle savedInstanceState) {
-        final Bundle arguments = this.requireArguments();
-
-        final AlertDialog.Builder builder = new AlertDialog.Builder(
-                this.requireContext(), this.getTheme())
-                .setTitle(arguments.getString(KEY_TITLE))
-                .setPositiveButton(
-                        arguments.getString(KEY_POSITIVE_BUTTON_TITLE),
-                        new DialogButtonClickListener(this, this.listener))
-                .setNegativeButton(
-                        arguments.getString(KEY_NEGATIVE_BUTTON_TITLE),
-                        new DialogButtonClickListener(this, this.listener));
-
-        final LayoutInflater inflater = LayoutInflater.from(builder.getContext());
-        final View view = inflater.inflate(R.layout.dialog_single_choise_and_button, null);
-        final RadioGroup radioGroup = view.findViewById(R.id.choice);
-        for (int i = 0; i < this.items.length; i++) {
-            final RadioButton itemView = (RadioButton) inflater.inflate(
-                    R.layout.single_choice_item, radioGroup, false);
-            itemView.setText(this.items[i]);
-            itemView.setChecked(i == this.selectedPosition);
-            itemView.setId(i);
-            radioGroup.addView(itemView);
+    override fun createDialog(savedInstanceState: Bundle?): Dialog {
+        val arguments = requireArguments()
+        val builder = AlertDialog.Builder(
+            requireContext(), this.theme
+        )
+            .setTitle(arguments.getString(KEY_TITLE))
+            .setPositiveButton(
+                arguments.getString(KEY_POSITIVE_BUTTON_TITLE),
+                DialogButtonClickListener(this, listener)
+            )
+            .setNegativeButton(
+                arguments.getString(KEY_NEGATIVE_BUTTON_TITLE),
+                DialogButtonClickListener(this, listener)
+            )
+        val inflater = LayoutInflater.from(builder.context)
+        val view = inflater.inflate(R.layout.dialog_single_choise_and_button, null)
+        val radioGroup = view.findViewById<RadioGroup>(R.id.choice)
+        for (i in items.indices) {
+            val itemView = inflater.inflate(
+                R.layout.single_choice_item, radioGroup, false
+            ) as RadioButton
+            itemView.text = items[i]
+            itemView.isChecked = i == selectedPosition
+            itemView.id = i
+            radioGroup.addView(itemView)
         }
-        radioGroup.setOnCheckedChangeListener(this);
-        final String additionalButtonText = arguments.getString(KEY_ADDITIONAL_BUTTON_TEXT);
-        final Button additionalButton = view.findViewById(R.id.button);
-        additionalButton.setVisibility(additionalButtonText != null ? View.VISIBLE : View.GONE);
-        additionalButton.setText(additionalButtonText);
-        additionalButton.setOnClickListener(this);
-
-        return builder.setView(view).create();
+        radioGroup.setOnCheckedChangeListener(this)
+        val additionalButtonText = arguments.getString(KEY_ADDITIONAL_BUTTON_TEXT)
+        val additionalButton = view.findViewById<Button>(R.id.button)
+        additionalButton.visibility =
+            if (additionalButtonText != null) View.VISIBLE else View.GONE
+        additionalButton.text = additionalButtonText
+        additionalButton.setOnClickListener(this)
+        return builder.setView(view).create()
     }
 
     /**
      * 選択項目変化時の処理
      *
-     * @param group {@link RadioGroup}
+     * @param group [RadioGroup]
      * @param checkedId 選択された項目のID
      */
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
+    override fun onCheckedChanged(group: RadioGroup, checkedId: Int) {
         // IDを保存する(IDが位置と同じ値になっている)
-        this.selectedPosition = checkedId;
+        selectedPosition = checkedId
     }
 
     /**
-     * {@link View} クリック時の処理
+     * [View] クリック時の処理
      *
-     * @param view クリックされた{@link View}
+     * @param view クリックされた[View]
      */
-    @Override
-    public void onClick(View view) {
-        if (view != null && view.getId() == R.id.button) {
+    override fun onClick(view: View) {
+        if (view.id == R.id.button) {
             // 追加ボタンクリック時
-            this.onClickAdditionalButton();
+            onClickAdditionalButton()
         }
     }
 
     /**
      * 追加ボタンクリック時の処理
      */
-    protected abstract void onClickAdditionalButton();
+    protected abstract fun onClickAdditionalButton()
+
+    companion object {
+        /**
+         * ダイアログ引数キー:追加ボタン文言
+         */
+        private const val KEY_ADDITIONAL_BUTTON_TEXT = "additionalButtonText"
+
+        /**
+         * Tag for log
+         */
+        private const val TAG = "SingleChoiceAndButtonDialogBase"
+    }
 }

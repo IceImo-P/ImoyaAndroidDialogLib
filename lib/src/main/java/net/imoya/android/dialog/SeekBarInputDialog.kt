@@ -1,420 +1,363 @@
-package net.imoya.android.dialog;
+package net.imoya.android.dialog
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.SeekBar;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
-import net.imoya.android.util.Log;
-
-import java.util.Objects;
+import android.app.Activity
+import android.app.Dialog
+import android.content.Intent
+import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.EditText
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import net.imoya.android.dialog.SeekBarInputDialog.Builder
+import net.imoya.android.util.Log
 
 /**
  * シークバー付き、数値入力ダイアログ
- * <p/>
- * タイトル、メッセージ、シークバー、入力欄、OKボタン、キャンセルボタンを持つ、
- * 汎用ダイアログフラグメントです。<ul>
- * <li>親画面は {@link Listener} を実装した {@link Fragment} 又は {@link AppCompatActivity}
- * でなければなりません。</li>
- * <li>{@link Builder}を使用して表示内容を設定し、表示してください。</li>
- * <li>ダイアログ終了時 {@link Listener#onDialogResult(int, int, Intent)}
- * メソッドが呼び出されます。</li>
- * <li>OKボタンがクリックされた場合は、
- * {@link Listener#onDialogResult(int, int, Intent)} メソッドの引数 resultCode の値が
- * {@link Activity#RESULT_OK} となります。このとき、引数 data の
- * {@link Intent#getIntExtra(String, int)} へ {@link SeekBarInputDialog#EXTRA_KEY_INPUT_VALUE}, 0
- * を入力することで、入力された値を取得できます。</li>
- * <li>キャンセルボタンがクリックされた場合、又はダイアログがキャンセル終了した場合は、
- * {@link Listener#onDialogResult(int, int, Intent)} メソッドの引数 resultCode の値が
- * {@link Activity#RESULT_CANCELED} となります。</li>
- * </ul>
+ *
+ *
+ * タイトル, メッセージ, シークバー, 入力欄, OKボタン, キャンセルボタンを持つダイアログ [Fragment] です。
+ *  * 親画面は [DialogBase.Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
+ *  * [Builder]を使用して表示内容を設定し、 [Builder.show] メソッドをコールして表示してください。
+ *  * ダイアログ終了時 [DialogBase.Listener.onDialogResult] メソッドがコールされます。
+ *  * OKボタン押下に伴うダイアログ終了時、 [DialogBase.Listener.onDialogResult] メソッドの引数
+ *  resultCode の値が [Activity.RESULT_OK] となります。このとき、引数 data の [Intent.getIntExtra] へ
+ * [SeekBarInputDialog.EXTRA_KEY_INPUT_VALUE], 0 を入力することで、入力された値を取得できます。
+ *  * OKボタン押下以外の理由でダイアログが終了した場合は、
+ * [DialogBase.Listener.onDialogResult] メソッドの引数 resultCode の値が
+ * [Activity.RESULT_CANCELED] となります。
+ *
  */
-@SuppressWarnings("unused")
-public class SeekBarInputDialog extends OkCancelDialog
-        implements SeekBar.OnSeekBarChangeListener, TextWatcher {
-    /**
-     * 結果キー定義:入力値
-     */
-    public static final String EXTRA_KEY_INPUT_VALUE = "inputValue";
-
+open class SeekBarInputDialog : OkCancelDialog(), OnSeekBarChangeListener, TextWatcher {
     /**
      * ダイアログビルダ
      */
-    public static class Builder extends OkCancelDialog.Builder {
+    open class Builder(parent: BuilderParent, requestCode: Int) :
+        OkCancelDialog.Builder(parent, requestCode) {
         /**
          * レイアウトリソースID
          */
-        private int layoutResourceId = 0;
+        @JvmField
+        protected var layoutResourceId = 0
+
         /**
          * 最小値
          */
-        private int min = 0;
+        @JvmField
+        protected var min = 0
+
         /**
          * 最大値
          */
-        private int max = 100;
+        @JvmField
+        protected var max = 100
+
         /**
          * 入力初期値
          */
-        private int value = 0;
-
-        /**
-         * コンストラクタ
-         *
-         * @param activity    親画面となる {@link AppCompatActivity}
-         * @param requestCode リクエストコード
-         * @param <T>         親画面は {@link Listener} を実装した {@link AppCompatActivity} であること
-         */
-        public <T extends AppCompatActivity & Listener> Builder(@NonNull T activity, int requestCode) {
-            super(activity, requestCode);
-        }
-
-        /**
-         * コンストラクタ
-         *
-         * @param fragment    親画面となる{@link Fragment}
-         * @param requestCode リクエストコード
-         */
-        public <T extends Fragment & Listener> Builder(@NonNull T fragment, int requestCode) {
-            super(fragment, requestCode);
-        }
+        @JvmField
+        protected var value = 0
 
         /**
          * タイトル文言を設定します。
          *
          * @param title タイトル文言
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setTitle(@NonNull String title) {
-            super.setTitle(title);
-            return this;
+        override fun setTitle(title: String): Builder {
+            super.setTitle(title)
+            return this
         }
 
         /**
          * メッセージ文言を設定します。
          *
          * @param message メッセージ文言
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setMessage(@NonNull String message) {
-            super.setMessage(message);
-            return this;
+        override fun setMessage(message: String): Builder {
+            super.setMessage(message)
+            return this
         }
 
         /**
          * インスタンス識別用タグを設定します。
          *
          * @param tag タグ
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setTag(@NonNull String tag) {
-            super.setTag(tag);
-            return this;
+        override fun setTag(tag: String): Builder {
+            super.setTag(tag)
+            return this
         }
 
         /**
-         * OKボタン文言を設定します。デフォルト値は {@link android.R.string#ok } です。
+         * OKボタン文言を設定します。デフォルト値は [android.R.string.ok] です。
          *
          * @param buttonTitle ボタン文言
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setPositiveButtonTitle(@NonNull String buttonTitle) {
-            super.setPositiveButtonTitle(buttonTitle);
-            return this;
+        override fun setPositiveButtonTitle(buttonTitle: String): Builder {
+            super.setPositiveButtonTitle(buttonTitle)
+            return this
         }
 
         /**
-         * キャンセルボタン文言を設定します。デフォルト値は {@link android.R.string#cancel } です。
+         * キャンセルボタン文言を設定します。デフォルト値は [android.R.string.cancel] です。
          *
          * @param buttonTitle ボタン文言
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setNegativeButtonTitle(@NonNull String buttonTitle) {
-            super.setNegativeButtonTitle(buttonTitle);
-            return this;
+        override fun setNegativeButtonTitle(buttonTitle: String): Builder {
+            super.setNegativeButtonTitle(buttonTitle)
+            return this
         }
 
         /**
          * 入力部分のレイアウトリソースIDを設定します。
-         * <p>
-         * リソースには、最低限次の要素が必要です:<ul>
-         * <li>スライダ(シークバー)となる、 id="slider" である {@link SeekBar}</li>
-         * <li>入力欄となる、 id="value" である {@link EditText}</li>
-         * </ul>
+         *
+         *
+         * リソースには、最低限次の要素が必要です:
+         *  * スライダ(シークバー)となる、 id="slider" である [SeekBar]
+         *  * 入力欄となる、 id="value" である [EditText]
+         *
          *
          * @param layoutResourceId 入力部分のレイアウトリソースID
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @NonNull
-        public Builder setLayoutResourceId(int layoutResourceId) {
-            this.layoutResourceId = layoutResourceId;
-            return this;
+        open fun setLayoutResourceId(layoutResourceId: Int): Builder {
+            this.layoutResourceId = layoutResourceId
+            return this
         }
 
         /**
          * 最小値を設定します。
          *
          * @param min 最小値
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @NonNull
-        public Builder setMin(int min) {
-            this.min = min;
-            return this;
+        open fun setMin(min: Int): Builder {
+            this.min = min
+            return this
         }
 
         /**
          * 最大値を設定します。
          *
          * @param max 最大値
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @NonNull
-        public Builder setMax(int max) {
-            this.max = max;
-            return this;
+        open fun setMax(max: Int): Builder {
+            this.max = max
+            return this
         }
 
         /**
          * 初期値を設定します。
          *
          * @param value 初期値
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @NonNull
-        public Builder setValue(int value) {
-            this.value = value;
-            return this;
+        open fun setValue(value: Int): Builder {
+            this.value = value
+            return this
         }
 
         /**
          * 実装クラスのインスタンスを生成して返します。
          *
-         * @return {@link DialogBase}
+         * @return [DialogBase]
          */
-        @Override
-        @NonNull
-        protected DialogBase createFragment() {
-            return new SeekBarInputDialog();
+        override fun createFragment(): DialogBase {
+            return SeekBarInputDialog()
         }
 
         /**
          * ダイアログへ渡す引数を生成して返します。
          *
-         * @return 引数を含んだ {@link Bundle}
+         * @return 引数を含んだ [Bundle]
          */
-        @Override
-        @NonNull
-        protected Bundle makeArguments() {
-            final Bundle arguments = super.makeArguments();
-
-            if (this.layoutResourceId != 0) {
-                arguments.putInt(KEY_LAYOUT_RESOURCE_ID, this.layoutResourceId);
+        override fun makeArguments(): Bundle {
+            val arguments = super.makeArguments()
+            if (layoutResourceId != 0) {
+                arguments.putInt(KEY_LAYOUT_RESOURCE_ID, layoutResourceId)
             }
-            if (this.min > this.max) {
-                throw new IllegalStateException("min > max");
-            }
-            arguments.putInt(KEY_MIN, this.min);
-            arguments.putInt(KEY_MAX, this.max);
-            arguments.putInt(EXTRA_KEY_INPUT_VALUE, this.value);
-
-            return arguments;
+            check(min <= max) { "min > max" }
+            arguments.putInt(KEY_MIN, min)
+            arguments.putInt(KEY_MAX, max)
+            arguments.putInt(EXTRA_KEY_INPUT_VALUE, value)
+            return arguments
         }
     }
 
     /**
      * ボタンクリックリスナの実装
      */
-    private static class DialogButtonClickListener extends OkCancelDialog.DialogButtonClickListener {
+    private class DialogButtonClickListener(dialog: SeekBarInputDialog, listener: Listener) :
+        OkCancelDialog.DialogButtonClickListener(dialog, listener) {
         /**
-         * コンストラクタ
+         * ボタン押下時に [DialogBase.Listener.onDialogResult] へ入力する [Intent] を生成して返します。
          *
-         * @param dialog   ダイアログ
-         * @param listener ダイアログのリスナ
+         * @return [Intent]
          */
-        private DialogButtonClickListener(SeekBarInputDialog dialog, Listener listener) {
-            super(dialog, listener);
-        }
-
-        /**
-         * ボタン押下時に {@link Fragment#onActivityResult(int, int, Intent)} へ通知する
-         * {@link Intent} を生成して返します。
-         *
-         * @return {@link Intent}
-         */
-        @Override
-        @NonNull
-        protected Intent makeData() {
-            final Intent intent = super.makeData();
-            intent.putExtra(EXTRA_KEY_INPUT_VALUE, ((SeekBarInputDialog) this.dialog).getValue());
-            return intent;
+        override fun makeData(): Intent {
+            val intent = super.makeData()
+            intent.putExtra(EXTRA_KEY_INPUT_VALUE, (dialog as SeekBarInputDialog).value)
+            return intent
         }
     }
-
-    private static final String TAG = "SeekBarInputDialog";
-
-    /**
-     * ダイアログ引数キー:最小値
-     */
-    protected static final String KEY_MIN = "min";
-    /**
-     * ダイアログ引数キー:最大値
-     */
-    protected static final String KEY_MAX = "max";
 
     /**
      * 最小値
      */
-    protected int min = 0;
+    @JvmField
+    protected var min = 0
+
     /**
      * 最大値
      */
-    protected int max = 100;
+    @JvmField
+    protected var max = 100
+
     /**
      * 数値入力欄
      */
-    protected EditText editText = null;
-    /**
-     * シークバー({@link SeekBar})
-     */
-    protected SeekBar seekBar = null;
+    protected lateinit var editText: EditText
 
     /**
-     * {@link #editText} 訂正中フラグ
+     * シークバー([SeekBar])
      */
-    protected boolean inCorrect = false;
+    protected lateinit var seekBar: SeekBar
+
+    /**
+     * [.editText] 訂正中フラグ
+     */
+    @JvmField
+    protected var inCorrect = false
 
     /**
      * 入力された値を取得します。
      *
      * @return 入力値
      */
-    public int getValue() {
-        return ((SeekBar) Objects.requireNonNull(this.getDialog()).findViewById(R.id.slider)).getProgress() + this.min;
-    }
+    val value: Int
+        get() = (this.dialog?.findViewById<View>(R.id.slider) as SeekBar).progress + min
 
     /**
      * ダイアログ生成処理
      *
      * @param savedInstanceState 前回強制終了時の保存データ
-     * @return 生成した{@link Dialog}
+     * @return 生成した [Dialog]
      */
-    @Override
-    @NonNull
-    public Dialog createDialog(Bundle savedInstanceState) {
-        final Bundle arguments = this.requireArguments();
-        this.min = arguments.getInt(KEY_MIN, 0);
-        this.max = arguments.getInt(KEY_MAX, 100);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(
-                this.requireActivity(), this.getTheme())
-                .setTitle(arguments.getString(KEY_TITLE))
-                .setMessage(arguments.getString(KEY_MESSAGE))
-                .setPositiveButton(
-                        arguments.getString(KEY_POSITIVE_BUTTON_TITLE),
-                        new DialogButtonClickListener(this, this.listener))
-                .setNegativeButton(
-                        arguments.getString(KEY_NEGATIVE_BUTTON_TITLE),
-                        new DialogButtonClickListener(this, this.listener));
-        final View view = LayoutInflater.from(builder.getContext()).inflate(
-                arguments.getInt(KEY_LAYOUT_RESOURCE_ID, R.layout.dialog_seekbar_input),
-                null);
-        this.editText = view.findViewById(R.id.value);
-        this.editText.setText(String.valueOf(arguments.getInt(EXTRA_KEY_INPUT_VALUE)));
-        this.editText.addTextChangedListener(this);
-        this.seekBar = view.findViewById(R.id.slider);
-        this.seekBar.setMax(this.max - this.min);
-        this.seekBar.setProgress(arguments.getInt(EXTRA_KEY_INPUT_VALUE) - this.min);
-        this.seekBar.setOnSeekBarChangeListener(this);
-        return builder.setView(view).create();
+    override fun createDialog(savedInstanceState: Bundle?): Dialog {
+        val arguments = requireArguments()
+        min = arguments.getInt(KEY_MIN, 0)
+        max = arguments.getInt(KEY_MAX, 100)
+        val builder = AlertDialog.Builder(
+            requireActivity(), this.theme
+        )
+            .setTitle(arguments.getString(KEY_TITLE))
+            .setMessage(arguments.getString(KEY_MESSAGE))
+            .setPositiveButton(
+                arguments.getString(KEY_POSITIVE_BUTTON_TITLE),
+                DialogButtonClickListener(this, listener)
+            )
+            .setNegativeButton(
+                arguments.getString(KEY_NEGATIVE_BUTTON_TITLE),
+                DialogButtonClickListener(this, listener)
+            )
+        val view = LayoutInflater.from(builder.context).inflate(
+            arguments.getInt(KEY_LAYOUT_RESOURCE_ID, R.layout.dialog_seekbar_input),
+            null
+        )
+        editText = view.findViewById(R.id.value)
+        editText.setText(arguments.getInt(EXTRA_KEY_INPUT_VALUE).toString())
+        editText.addTextChangedListener(this)
+        seekBar = view.findViewById(R.id.slider)
+        seekBar.max = max - min
+        seekBar.progress = arguments.getInt(EXTRA_KEY_INPUT_VALUE) - min
+        seekBar.setOnSeekBarChangeListener(this)
+        return builder.setView(view).create()
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
+//    override fun onDestroyView() {
+//        super.onDestroyView()
+//
 //        Log.d(TAG, "onDestroyView");
+//        editText = null
+//        seekBar = null
+//    }
 
-        this.editText = null;
-        this.seekBar = null;
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-        Log.d(TAG, "afterTextChanged: inCorrect = " + this.inCorrect);
-        if (!this.inCorrect) {
-            this.inCorrect = true;
-            Log.d(TAG, "afterTextChanged: s = " + s.toString());
-            if (s.length() == 0) {
+    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+    override fun afterTextChanged(s: Editable) {
+        Log.d(TAG, "afterTextChanged: inCorrect = $inCorrect")
+        if (!inCorrect) {
+            inCorrect = true
+            Log.d(TAG, "afterTextChanged: s = $s")
+            if (s.isEmpty()) {
                 // 空文字の場合は最小値扱いとする
-                this.seekBar.setProgress(0);
-            } else if ("-".equals(s.toString()) && this.min < 0) {
+                seekBar.progress = 0
+            } else if ("-" == s.toString() && min < 0) {
                 // 0未満を入力可能の場合、マイナス記号のみ入力はOKとする(入力途中且つ0扱い)
-                this.seekBar.setProgress(-this.min);
+                seekBar.progress = -min
             } else {
-                int value;
-                try {
-                    value = Integer.parseInt(s.toString(), 10);
-                } catch (Exception e) {
-                    value = 0;
+                var value: Int
+                value = try {
+                    s.toString().toInt(10)
+                } catch (e: Exception) {
+                    0
                 }
-                if (value < this.min) {
-                    value = this.min;
-                    s.clear();
-                    s.append(String.valueOf(value));
-                } else if (value > this.max) {
-                    value = this.max;
-                    s.clear();
-                    s.append(String.valueOf(value));
+                if (value < min) {
+                    value = min
+                    s.clear()
+                    s.append(value.toString())
+                } else if (value > max) {
+                    value = max
+                    s.clear()
+                    s.append(value.toString())
                 }
-                this.seekBar.setProgress(value - this.min);
+                seekBar.progress = value - min
             }
-            this.inCorrect = false;
-            Log.d(TAG, "afterTextChanged: end");
+            inCorrect = false
+            Log.d(TAG, "afterTextChanged: end")
         }
     }
 
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        Log.d(TAG, "onProgressChanged: progress = " + progress + ", fromUser = " + fromUser);
+    override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+        Log.d(TAG, "onProgressChanged: progress = $progress, fromUser = $fromUser")
         if (fromUser) {
-            this.editText.setText(String.valueOf(progress + this.min));
+            editText.setText((progress + min).toString())
         }
     }
 
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-    }
+    override fun onStartTrackingTouch(seekBar: SeekBar) {}
+    override fun onStopTrackingTouch(seekBar: SeekBar) {}
 
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
+    companion object {
+        /**
+         * 結果キー定義:入力値
+         */
+        const val EXTRA_KEY_INPUT_VALUE = "inputValue"
+
+        /**
+         * ダイアログ引数キー:最小値
+         */
+        /* protected */ const val KEY_MIN = "min"
+
+        /**
+         * ダイアログ引数キー:最大値
+         */
+        /* protected */ const val KEY_MAX = "max"
+
+        /**
+         * Tag for log
+         */
+        private const val TAG = "SeekBarInputDialog"
     }
 }

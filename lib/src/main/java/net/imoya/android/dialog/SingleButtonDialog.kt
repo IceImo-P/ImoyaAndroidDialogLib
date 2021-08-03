@@ -1,173 +1,136 @@
-package net.imoya.android.dialog;
+package net.imoya.android.dialog
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Intent;
-import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import android.app.Activity
+import android.app.Dialog
+import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import net.imoya.android.dialog.SingleButtonDialog.Builder
 
 /**
  * ボタン1個のダイアログ
- * <p/>
- * タイトル、メッセージ、1個のボタンを持つ、汎用ダイアログフラグメントです。<ul>
- * <li>親画面は {@link Listener} を実装した {@link Fragment} 又は {@link AppCompatActivity}
- * でなければなりません。</li>
- * <li>{@link Builder}を使用して表示内容を設定し、 {@link Builder#show()}
- * メソッドを呼び出して表示してください。</li>
- * <li>ダイアログ終了時 {@link Listener#onDialogResult(int, int, Intent)}
- * メソッドが呼び出されます。</li>
- * <li>ボタンがクリックされた場合、
- * {@link Listener#onDialogResult(int, int, Intent)} メソッドの引数 resultCode の値が
- * {@link Activity#RESULT_OK} となります。</li>
- * <li>ダイアログがキャンセル終了した場合、
- * {@link Listener#onDialogResult(int, int, Intent)} メソッドの引数 resultCode の値が
- * {@link Activity#RESULT_CANCELED} となります。</li>
- * </ul>
+ *
+ * タイトル, メッセージ, 1個のボタンを持つダイアログ [Fragment] です。
+ *  * 親画面は [DialogBase.Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
+ *  * [Builder] を使用して表示内容を設定し、 [Builder.show] メソッドをコールして表示してください。
+ *  * ダイアログ終了時 [DialogBase.Listener.onDialogResult] メソッドがコールされます。
+ *  * ボタン押下に伴うダイアログ終了時、 [DialogBase.Listener.onDialogResult] メソッドの引数
+ *  resultCode の値が [Activity.RESULT_OK] となります。
+ *  * ボタン押下以外の理由でダイアログが終了した場合、
+ * [DialogBase.Listener.onDialogResult] メソッドの引数 resultCode の値が
+ * [Activity.RESULT_CANCELED] となります。
  */
-public class SingleButtonDialog extends DialogBase {
+open class SingleButtonDialog : DialogBase() {
     /**
      * ダイアログビルダ
      */
-    public static class Builder extends DialogBase.Builder {
+    open class Builder(parent: BuilderParent, requestCode: Int) :
+        DialogBase.Builder(parent, requestCode) {
         /**
          * ボタン文言
          */
-        private String buttonTitle;
-
-        /**
-         * コンストラクタ
-         *
-         * @param activity    親画面となる {@link AppCompatActivity}
-         * @param requestCode リクエストコード
-         * @param <T>         親画面は {@link Listener} を実装した {@link AppCompatActivity} であること
-         */
-        public <T extends AppCompatActivity & Listener> Builder(@NonNull T activity, int requestCode) {
-            super(new BuilderParentActivity<>(activity), requestCode);
-        }
-
-        /**
-         * コンストラクタ
-         *
-         * @param fragment    親画面となる{@link Fragment}
-         * @param requestCode リクエストコード
-         */
-        public <T extends Fragment & Listener> Builder(@NonNull T fragment, int requestCode) {
-            super(new BuilderParentFragment<>(fragment), requestCode);
-        }
+        protected open var buttonTitle: String? = null
 
         /**
          * タイトル文言を設定します。
          *
          * @param title タイトル文言
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setTitle(@NonNull String title) {
-            super.setTitle(title);
-            return this;
+        override fun setTitle(title: String): Builder {
+            super.setTitle(title)
+            return this
         }
 
         /**
          * メッセージ文言を設定します。
          *
          * @param message メッセージ文言
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setMessage(@NonNull String message) {
-            super.setMessage(message);
-            return this;
+        override fun setMessage(message: String): Builder {
+            super.setMessage(message)
+            return this
         }
 
         /**
          * インスタンス識別用タグを設定します。
          *
          * @param tag タグ
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @Override
-        @NonNull
-        public Builder setTag(@NonNull String tag) {
-            super.setTag(tag);
-            return this;
+        override fun setTag(tag: String): Builder {
+            super.setTag(tag)
+            return this
         }
 
         /**
          * ボタン文言を設定します。
          *
          * @param buttonTitle ボタン文言
-         * @return {@link Builder}
+         * @return [Builder]
          */
-        @NonNull
-        public Builder setButtonTitle(@NonNull String buttonTitle) {
-            this.buttonTitle = buttonTitle;
-            return this;
+        open fun setButtonTitle(buttonTitle: String): Builder {
+            this.buttonTitle = buttonTitle
+            return this
         }
 
         /**
          * 実装クラスのインスタンスを生成して返します。
          *
-         * @return {@link DialogBase}
+         * @return [DialogBase]
          */
-        @Override
-        @NonNull
-        protected DialogBase createFragment() {
-            return new SingleButtonDialog();
+        override fun createFragment(): DialogBase {
+            return SingleButtonDialog()
         }
 
         /**
          * ダイアログへ渡す引数を生成して返します。
          *
-         * @return 引数を含んだ {@link Bundle}
+         * @return 引数を含んだ [Bundle]
          */
-        @Override
-        @NonNull
-        protected Bundle makeArguments() {
-            final Bundle arguments = super.makeArguments();
-
-            if (this.buttonTitle != null) {
-                arguments.putString(KEY_BUTTON_TITLE, this.buttonTitle);
+        override fun makeArguments(): Bundle {
+            val arguments = super.makeArguments()
+            if (buttonTitle != null) {
+                arguments.putString(KEY_BUTTON_TITLE, buttonTitle)
             } else {
-                arguments.putString(KEY_BUTTON_TITLE,
-                        this.getContext().getString(android.R.string.ok));
+                arguments.putString(
+                    KEY_BUTTON_TITLE,
+                    context.getString(android.R.string.ok)
+                )
             }
-
-            return arguments;
+            return arguments
         }
     }
-
-//    private static final String TAG = "SingleButtonDialog";
-
-    /**
-     * ダイアログ引数キー:ボタン文言
-     */
-    protected static final String KEY_BUTTON_TITLE = "buttonTitle";
 
     /**
      * ダイアログ生成処理
      *
      * @param savedInstanceState 前回強制終了時の保存データ
-     * @return 生成した{@link Dialog}
+     * @return 生成した [Dialog]
      */
-    @Override
-    @NonNull
-    public Dialog createDialog(Bundle savedInstanceState) {
-        if (this.listener == null) {
-            throw new RuntimeException("listener is null");
-        }
-        final Bundle arguments = this.requireArguments();
-        return new AlertDialog.Builder(this.requireActivity(), this.getTheme())
-                .setTitle(arguments.getString(KEY_TITLE))
-                .setMessage(arguments.getString(KEY_MESSAGE))
-                .setPositiveButton(
-                        arguments.getString(KEY_BUTTON_TITLE),
-                        new DialogItemClickListener(this, this.listener))
-                .create();
+    public override fun createDialog(savedInstanceState: Bundle?): Dialog {
+        val arguments = requireArguments()
+        return AlertDialog.Builder(requireActivity(), this.theme)
+            .setTitle(arguments.getString(KEY_TITLE))
+            .setMessage(arguments.getString(KEY_MESSAGE))
+            .setPositiveButton(
+                arguments.getString(KEY_BUTTON_TITLE),
+                DialogItemClickListener(this, listener)
+            )
+            .create()
+    }
+
+    companion object {
+        /**
+         * ダイアログ引数キー:ボタン文言
+         */
+        /* protected */ const val KEY_BUTTON_TITLE = "buttonTitle"
+
+//        /**
+//         * Tag for log
+//         */
+//        private const val TAG = "SingleButtonDialog"
     }
 }
