@@ -42,8 +42,8 @@ task sourceJar(type: Jar) {
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId "net.imoya.android.fragment"
-            artifactId "imoya-android-fragment"
+            groupId "net.imoya.android.dialog"
+            artifactId "imoya-android-dialog"
             version "$libVersionName"
             artifact sourceJar
             artifact "$buildDir/outputs/aar/lib-release.aar"
