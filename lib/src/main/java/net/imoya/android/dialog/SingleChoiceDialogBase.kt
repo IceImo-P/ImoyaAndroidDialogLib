@@ -1,14 +1,13 @@
 package net.imoya.android.dialog
 
 import android.app.Activity
-import android.os.Bundle
 import android.content.Intent
+import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import net.imoya.android.dialog.SingleChoiceDialogBase.Builder
 import net.imoya.android.util.Log
-import java.lang.IllegalArgumentException
-import java.lang.NullPointerException
-import java.util.*
+import net.imoya.android.util.LogUtil
 
 /**
  * 単一項目選択ダイアログの abstract
@@ -182,7 +181,7 @@ abstract class SingleChoiceDialogBase : OkCancelDialog() {
         // 選択項目リストを、ダイアログ引数より取得する
         val tmpItems = arguments.getStringArray(KEY_ITEMS)
             ?: // 必ず指定しなければならない
-            throw NullPointerException("items == null")
+            throw RuntimeException("arguments[KEY_ITEMS] == null")
         // 参照する引数の変化を防ぐため、必ずcloneする
         items = tmpItems.clone()
 
@@ -195,8 +194,10 @@ abstract class SingleChoiceDialogBase : OkCancelDialog() {
             selectedPosition = -1
         }
         Log.d(
-            TAG, "onCreate: items = " + Arrays.asList(*items)
-                    + ", selectedPosition = " + selectedPosition
+            TAG,
+            "onCreate: items = ${
+                LogUtil.logString(items)
+            }, selectedPosition = $selectedPosition"
         )
     }
 
