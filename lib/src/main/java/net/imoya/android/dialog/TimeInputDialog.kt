@@ -210,12 +210,11 @@ open class TimeInputDialog : OkCancelDialog() {
             data.putExtra(EXTRA_KEY_MINUTE, pickerHelper.getMinute())
             Log.d(
                 TAG,
-                "makeData: hour = " + data.getIntExtra(
-                    EXTRA_KEY_HOUR,
-                    -1
-                ) + " minute = " + data.getIntExtra(
-                    EXTRA_KEY_MINUTE, -1
-                )
+                "makeData: hour = ${
+                    data.getIntExtra(EXTRA_KEY_HOUR, -1)
+                } minute = ${
+                    data.getIntExtra(EXTRA_KEY_MINUTE, -1)
+                }"
             )
             return data
         }

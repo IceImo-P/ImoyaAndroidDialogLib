@@ -9,8 +9,6 @@ import net.imoya.android.dialog.MultiChoiceDialogBase.Builder
 import net.imoya.android.dialog.MultiChoiceDialogBase.Companion.EXTRA_KEY_CHECKED_LIST
 import net.imoya.android.util.Log
 import net.imoya.android.util.LogUtil
-import java.lang.RuntimeException
-import java.util.*
 
 /**
  * 複数項目選択ダイアログ
@@ -195,7 +193,7 @@ abstract class MultiChoiceDialogBase : OkCancelDialog() {
 
         // 選択項目リストをダイアログ引数より取得する
         val tmpItems = arguments.getStringArray(KEY_ITEMS)
-            ?: throw RuntimeException("items == null")
+            ?: throw RuntimeException("arguments[KEY_ITEMS] == null")
         // 参照する引数の変化を防ぐため、必ずcloneする
         items = tmpItems.clone()
 
@@ -203,24 +201,30 @@ abstract class MultiChoiceDialogBase : OkCancelDialog() {
         val tmpCheckedList = if (savedInstanceState != null) savedInstanceState.getBooleanArray(
             EXTRA_KEY_CHECKED_LIST
         ) else arguments.getBooleanArray(EXTRA_KEY_CHECKED_LIST)
-        Log.d(TAG, "onCreate: tmpCheckedList = " + LogUtil.logString(tmpCheckedList))
+        Log.d(TAG, "onCreate: tmpCheckedList = ${LogUtil.logString(tmpCheckedList)}")
         if (tmpCheckedList != null && tmpCheckedList.size != items.size) {
             // チェック状態指定が選択項目数と異なる場合は、警告ログを出力する
             Log.w(
-                TAG, "onCreate: Illegal checked list length(Item count is "
-                        + items.size + " but checked list count is "
-                        + tmpCheckedList.size + ")"
+                TAG,
+                "onCreate: Illegal checked list length(Item count is ${
+                    items.size
+                } but checked list count is ${
+                    tmpCheckedList.size
+                })"
             )
         }
         // 参照する引数の変化を防ぐため、必ずcloneする
         // 引数が存在しない場合や項目数が異なる場合は、リストを新規作成する
         checkedList =
-            if (tmpCheckedList != null && tmpCheckedList.size == items.size) tmpCheckedList.clone() else BooleanArray(
-                items.size
-            )
+            if (tmpCheckedList != null && tmpCheckedList.size == items.size) tmpCheckedList.clone()
+            else BooleanArray(items.size)
         Log.d(
-            TAG, "onCreate: items = " + Arrays.asList(*items)
-                    + ", checkedList = " + LogUtil.logString(checkedList)
+            TAG,
+            "onCreate: items = ${
+                LogUtil.logString(items)
+            }, checkedList = ${
+                LogUtil.logString(checkedList)
+            }"
         )
     }
 
