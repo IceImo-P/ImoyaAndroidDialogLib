@@ -3,7 +3,6 @@ package net.imoya.android.dialog
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import net.imoya.android.dialog.MultiChoiceDialogBase.Builder
 import net.imoya.android.dialog.MultiChoiceDialogBase.Companion.EXTRA_KEY_CHECKED_LIST
@@ -14,15 +13,14 @@ import net.imoya.android.util.LogUtil
  * 複数項目選択ダイアログ
  *
  * タイトル, 複数選択リスト, OKボタン, キャンセルボタンを持つダイアログ [Fragment] です。
- *  * 親画面は [DialogBase.Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
  *  * [Builder]を使用して表示内容を設定し、 [Builder.show] メソッドをコールして表示してください。
- *  * ダイアログ終了時 [DialogBase.Listener.onDialogResult] メソッドがコールされます。
- *  * OKボタン押下に伴うダイアログ終了時、 [DialogBase.Listener.onDialogResult] メソッドの引数
+ *  * ダイアログ終了時 [DialogListener.onDialogResult] メソッドがコールされます。
+ *  * OKボタン押下に伴うダイアログ終了時、 [DialogListener.onDialogResult] メソッドの引数
  *  resultCode の値が [Activity.RESULT_OK] となります。このとき、引数 data の
  * [Intent.getBooleanArrayExtra] へ [EXTRA_KEY_CHECKED_LIST]
  * を入力することで、全項目の選択状態リストを取得できます。
  *  * OKボタン押下以外の理由でダイアログが終了した場合は、
- * [DialogBase.Listener.onDialogResult] メソッドの引数 resultCode の値が
+ * [DialogListener.onDialogResult] メソッドの引数 resultCode の値が
  * [Activity.RESULT_CANCELED] となります。
  */
 @Suppress("unused")
@@ -30,7 +28,7 @@ abstract class MultiChoiceDialogBase : OkCancelDialog() {
     /**
      * ダイアログビルダ
      */
-    abstract class Builder(parent: BuilderParent, requestCode: Int) :
+    abstract class Builder(parent: DialogParent, requestCode: Int) :
         OkCancelDialog.Builder(parent, requestCode) {
         /**
          * 選択項目リスト
@@ -155,14 +153,10 @@ abstract class MultiChoiceDialogBase : OkCancelDialog() {
     /**
      * ボタンクリックリスナの実装
      */
-    protected class DialogButtonClickListener(dialog: MultiChoiceDialogBase, listener: Listener) :
-        OkCancelDialog.DialogButtonClickListener(dialog, listener) {
-
-        /**
-         * ボタン押下時に [DialogBase.Listener.onDialogResult] へ入力する [Intent] を生成して返します。
-         *
-         * @return [Intent]
-         */
+    protected class DialogButtonClickListener(
+        dialog: MultiChoiceDialogBase,
+        listener: DialogListener
+    ) : OkCancelDialog.DialogButtonClickListener(dialog, listener) {
         override fun makeData(): Intent {
             val data = super.makeData()
             data.putExtra(

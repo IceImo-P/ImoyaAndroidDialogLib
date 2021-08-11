@@ -19,14 +19,13 @@ import net.imoya.android.util.Log
  * シークバー付き、数値入力ダイアログ
  *
  * タイトル, メッセージ, シークバー, 入力欄, OKボタン, キャンセルボタンを持つダイアログ [Fragment] です。
- *  * 親画面は [DialogBase.Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
  *  * [Builder]を使用して表示内容を設定し、 [Builder.show] メソッドをコールして表示してください。
- *  * ダイアログ終了時 [DialogBase.Listener.onDialogResult] メソッドがコールされます。
- *  * OKボタン押下に伴うダイアログ終了時、 [DialogBase.Listener.onDialogResult] メソッドの引数
+ *  * ダイアログ終了時 [DialogListener.onDialogResult] メソッドがコールされます。
+ *  * OKボタン押下に伴うダイアログ終了時、 [DialogListener.onDialogResult] メソッドの引数
  *  resultCode の値が [Activity.RESULT_OK] となります。このとき、引数 data の [Intent.getIntExtra] へ
  * [SeekBarInputDialog.EXTRA_KEY_INPUT_VALUE], 0 を入力することで、入力された値を取得できます。
  *  * OKボタン押下以外の理由でダイアログが終了した場合は、
- * [DialogBase.Listener.onDialogResult] メソッドの引数 resultCode の値が
+ * [DialogListener.onDialogResult] メソッドの引数 resultCode の値が
  * [Activity.RESULT_CANCELED] となります。
  */
 @Suppress("unused")
@@ -34,7 +33,7 @@ open class SeekBarAndButtonDialog : SeekBarInputDialog(), View.OnClickListener {
     /**
      * ダイアログビルダ
      */
-    open class Builder(parent: BuilderParent, requestCode: Int) :
+    open class Builder(parent: DialogParent, requestCode: Int) :
         SeekBarInputDialog.Builder(parent, requestCode) {
         /**
          * 追加ボタン文言
@@ -183,13 +182,10 @@ open class SeekBarAndButtonDialog : SeekBarInputDialog(), View.OnClickListener {
     /**
      * ボタンクリックリスナの実装
      */
-    private class DialogButtonClickListener(dialog: SeekBarAndButtonDialog, listener: Listener) :
-        OkCancelDialog.DialogButtonClickListener(dialog, listener) {
-        /**
-         * ボタン押下時に [DialogBase.Listener.onDialogResult] へ入力する [Intent] を生成して返します。
-         *
-         * @return [Intent]
-         */
+    private class DialogButtonClickListener(
+        dialog: SeekBarAndButtonDialog,
+        listener: DialogListener
+    ) : OkCancelDialog.DialogButtonClickListener(dialog, listener) {
         override fun makeData(): Intent {
             val intent = super.makeData()
             intent.putExtra(
@@ -200,12 +196,6 @@ open class SeekBarAndButtonDialog : SeekBarInputDialog(), View.OnClickListener {
         }
     }
 
-    /**
-     * ダイアログ生成処理
-     *
-     * @param savedInstanceState 前回強制終了時の保存データ
-     * @return 生成した [Dialog]
-     */
     override fun createDialog(savedInstanceState: Bundle?): Dialog {
         val arguments = requireArguments()
         min = arguments.getInt(KEY_MIN, 0)

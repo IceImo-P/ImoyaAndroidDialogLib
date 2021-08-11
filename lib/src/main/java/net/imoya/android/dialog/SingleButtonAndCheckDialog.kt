@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.CompoundButton
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import net.imoya.android.dialog.SingleButtonAndCheckDialog.Builder
 
@@ -16,15 +15,14 @@ import net.imoya.android.dialog.SingleButtonAndCheckDialog.Builder
  * ボタン1個とチェックボックス1個のダイアログ
  *
  * タイトル, メッセージ, 1個のチェックボックス, 1個のボタンを持つダイアログ [Fragment] です。
- *  * 親画面は [DialogBase.Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
  *  * [Builder]を使用して表示内容を設定し、 [Builder.show] メソッドをコールして表示してください。
- *  * ダイアログ終了時 [DialogBase.Listener.onDialogResult] メソッドがコールされます。
- *  * ボタン押下に伴うダイアログ終了時、 [DialogBase.Listener.onDialogResult] メソッドの引数
+ *  * ダイアログ終了時 [DialogListener.onDialogResult] メソッドがコールされます。
+ *  * ボタン押下に伴うダイアログ終了時、 [DialogListener.onDialogResult] メソッドの引数
  *  resultCode の値が [Activity.RESULT_OK] となります。このとき、引数 data の
  *  [Intent.getBooleanExtra] メソッドへ [SingleButtonAndCheckDialog.EXTRA_KEY_CHECKED], false
  * を入力することで、チェックボックスのチェック有無を取得できます。
  *  * ボタン押下以外の理由でダイアログが終了した場合、
- * [DialogBase.Listener.onDialogResult] メソッドの引数 resultCode の値が
+ * [DialogListener.onDialogResult] メソッドの引数 resultCode の値が
  * [Activity.RESULT_CANCELED] となります。
  */
 @Suppress("unused")
@@ -32,7 +30,7 @@ open class SingleButtonAndCheckDialog : SingleButtonDialog() {
     /**
      * ダイアログビルダ
      */
-    open class Builder(parent: BuilderParent, requestCode: Int) :
+    open class Builder(parent: DialogParent, requestCode: Int) :
         SingleButtonDialog.Builder(parent, requestCode) {
         /**
          * チェックボックス文言
@@ -139,13 +137,9 @@ open class SingleButtonAndCheckDialog : SingleButtonDialog() {
     /**
      * ボタンクリックリスナの実装
      */
-    private class DialogButtonClickListener(dialog: DialogBase, listener: Listener) :
-        DialogItemClickListener(dialog, listener) {
-        /**
-         * ボタン押下時に [DialogBase.Listener.onDialogResult] へ入力する [Intent] を生成して返します。
-         *
-         * @return [Intent]
-         */
+    private class DialogButtonClickListener(
+        dialog: DialogBase, listener: DialogListener
+    ) : DialogItemClickListener(dialog, listener) {
         override fun makeData(): Intent {
             // チェックボックス状態を含める
             val data = Intent()
@@ -165,12 +159,6 @@ open class SingleButtonAndCheckDialog : SingleButtonDialog() {
     val isChecked: Boolean
         get() = (this.dialog?.findViewById<View>(R.id.check) as CompoundButton).isChecked
 
-    /**
-     * ダイアログ生成処理
-     *
-     * @param savedInstanceState 前回強制終了時の保存データ
-     * @return 生成した [Dialog]
-     */
     override fun createDialog(savedInstanceState: Bundle?): Dialog {
         val arguments = requireArguments()
         val builder = AlertDialog.Builder(requireActivity(), theme)

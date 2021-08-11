@@ -20,7 +20,7 @@ abstract class InputDialog : OkCancelDialog() {
     /**
      * ダイアログビルダ
      */
-    abstract class Builder(parent: BuilderParent, requestCode: Int) :
+    abstract class Builder(parent: DialogParent, requestCode: Int) :
         OkCancelDialog.Builder(parent, requestCode) {
         /**
          * レイアウトリソースID
@@ -190,8 +190,10 @@ abstract class InputDialog : OkCancelDialog() {
     /**
      * ボタンクリックリスナの実装
      */
-    protected abstract class DialogButtonClickListener(dialog: InputDialog, listener: Listener) :
-        OkCancelDialog.DialogButtonClickListener(dialog, listener)
+    protected abstract class DialogButtonClickListener(
+        dialog: InputDialog,
+        listener: DialogListener
+    ) : OkCancelDialog.DialogButtonClickListener(dialog, listener)
 
     /**
      * ボタンクリック時の処理を実装した [DialogButtonClickListener] を返します。

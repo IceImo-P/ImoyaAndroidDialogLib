@@ -9,235 +9,42 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import net.imoya.android.dialog.DialogBase.Builder
-import net.imoya.android.dialog.DialogBase.Listener
 import net.imoya.android.util.Log
 
 /**
  * ダイアログ [Fragment] の abstract
  *
  * 本ライブラリが提供する全ダイアログ [Fragment] の基底クラスです。
- *  * 親画面は [Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
- *  [BuilderParent] の実装クラスを独自に作成することにより、他のクラスを親画面とすることも可能です。
- *  * [Builder] を継承したクラスを使用して表示内容を設定し、[Builder.show] メソッドをコールして表示してください。
- *  * ダイアログ終了時 [Listener.onDialogResult] メソッドがコールされます。
- *  * ダイアログがキャンセル終了した場合、 [Listener.onDialogResult] メソッドの引数 resultCode の値が
+ *  * 親画面は [DialogListener] を実装した [Fragment] 又は [AppCompatActivity] を想定していますが、
+ *  [DialogParent] の実装クラスを独自に作成することにより、他のクラスを親画面とすることも可能です。
+ *  * [DialogBuilder] を継承したクラスを使用して表示内容を設定し、
+ *  [DialogBuilder.show] メソッドをコールして表示してください。
+ *  * ダイアログ終了時 [DialogListener.onDialogResult] メソッドがコールされます。
+ *  * ダイアログがキャンセル終了した場合、 [DialogListener.onDialogResult] メソッドの引数 resultCode の値が
  *  [Activity.RESULT_CANCELED] となります。
  */
 @Suppress("unused")
 abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelListener {
-    /**
-     * ダイアログリスナ
-     */
-    interface Listener {
-        /**
-         * ダイアログ終了時にコールされます。
-         *
-         * @param requestCode [Builder] に設定したリクエストコード
-         * @param resultCode 結果コード
-         * @param data 追加のデータを含む [Intent]
-         */
-        fun onDialogResult(requestCode: Int, resultCode: Int, data: Intent?)
-    }
+    @Deprecated("Use DialogListener")
+    interface Listener : DialogListener
+
+    @Deprecated("Use DialogParent")
+    interface BuilderParent : DialogParent
+
+    @Deprecated("Use DialogParentActivity")
+    class BuilderParentActivity<T>(activity: T) :
+        DialogParentActivity<T>(activity) where T : AppCompatActivity, T : DialogListener
+
+    @Deprecated("Use DialogParentFragment")
+    class BuilderParentFragment<T>(fragment: T) :
+        DialogParentFragment<T>(fragment) where T : Fragment, T : DialogListener
+
+    @Deprecated("Use DialogBuilder")
+    abstract class Builder(parent: DialogParent, requestCode: Int) :
+        DialogBuilder(parent, requestCode)
 
     /**
-     * ダイアログの親画面
-     */
-    interface BuilderParent {
-        /**
-         * Returns application [Context]
-         */
-        val context: Context
-
-        /**
-         * Returns [Listener]
-         */
-        val listener: Listener
-
-        /**
-         * Returns [FragmentManager]
-         */
-        val fragmentManager: FragmentManager
-    }
-
-    /**
-     * ダイアログの親画面である [AppCompatActivity]
-     */
-    open class BuilderParentActivity<T>(
-        protected val activity: T
-    ) : BuilderParent where T : AppCompatActivity, T : Listener {
-        override val context: Context
-            get() = activity.applicationContext
-
-        override val listener: Listener
-            get() = activity
-
-        override val fragmentManager: FragmentManager
-            get() = activity.supportFragmentManager
-    }
-
-    /**
-     * ダイアログの親画面である [Fragment]
-     */
-    open class BuilderParentFragment<T>(
-        protected val fragment: T
-    ) : BuilderParent where T : Fragment, T : Listener {
-        override val context: Context
-            get() = fragment.requireContext().applicationContext
-
-        override val listener: Listener
-            get() = fragment
-
-        override val fragmentManager: FragmentManager
-            get() = fragment.parentFragmentManager
-    }
-
-    /**
-     * ダイアログビルダ
-     */
-    abstract class Builder(
-        /**
-         * 親画面
-         */
-        @JvmField
-        protected val parent: BuilderParent,
-
-        /**
-         * リクエストコード
-         */
-        @JvmField
-        protected val requestCode: Int
-    ) {
-        /**
-         * タイトル
-         */
-        @JvmField
-        protected var title: String? = null
-
-        /**
-         * メッセージ
-         */
-        @JvmField
-        protected var message: String? = null
-
-        /**
-         * タグ
-         */
-        @JvmField
-        protected var tag: String? = null
-
-        /**
-         * キャンセル可能フラグ
-         */
-        @JvmField
-        protected var cancelable = true
-
-        /**
-         * ダイアログ外クリック時キャンセル実行フラグ
-         */
-        @JvmField
-        protected var canceledOnTouchOutside = true
-
-        /**
-         * タイトル文言を設定します。
-         *
-         * @param title タイトル文言
-         * @return [Builder]
-         */
-        open fun setTitle(title: String): Builder {
-            this.title = title
-            return this
-        }
-
-        /**
-         * メッセージ文言を設定します。
-         *
-         * @param message メッセージ文言
-         * @return [Builder]
-         */
-        open fun setMessage(message: String): Builder {
-            this.message = message
-            return this
-        }
-
-        /**
-         * インスタンス識別用タグを設定します。
-         *
-         * @param tag タグ
-         * @return [Builder]
-         */
-        open fun setTag(tag: String): Builder {
-            this.tag = tag
-            return this
-        }
-
-        /**
-         * キャンセル可能フラグを設定します。
-         * デフォルト値は true です。
-         *
-         * @param cancelable キャンセル可能フラグ
-         * @return [Builder]
-         */
-        open fun setCancelable(cancelable: Boolean): Builder {
-            this.cancelable = cancelable
-            return this
-        }
-
-        /**
-         * ダイアログ外クリック時キャンセル実行フラグを設定します。
-         * デフォルト値は true です。
-         *
-         * @param canceledOnTouchOutside ダイアログ外クリック時キャンセル実行フラグ
-         * @return [Builder]
-         */
-        open fun setCanceledOnTouchOutside(canceledOnTouchOutside: Boolean): Builder {
-            this.canceledOnTouchOutside = canceledOnTouchOutside
-            return this
-        }
-
-        /**
-         * 実装クラスのインスタンスを生成して返します。
-         *
-         * @return [DialogBase]
-         */
-        protected abstract fun createFragment(): DialogBase
-
-        /**
-         * ダイアログへ渡す引数を生成して返します。
-         *
-         * @return 引数を含んだ [Bundle]
-         */
-        protected open fun makeArguments(): Bundle {
-            val arguments = Bundle()
-            arguments.putInt(KEY_REQUEST_CODE, requestCode)
-            arguments.putString(EXTRA_KEY_TAG, tag)
-            if (title != null) {
-                arguments.putString(KEY_TITLE, title)
-            }
-            if (message != null) {
-                arguments.putString(KEY_MESSAGE, message)
-            }
-            arguments.putBoolean(KEY_CANCELABLE, cancelable)
-            arguments.putBoolean(KEY_CANCELED_ON_TOUCH_OUTSIDE, canceledOnTouchOutside)
-            return arguments
-        }
-
-        /**
-         * ダイアログを表示します。
-         */
-        open fun show() {
-            val fragment = createFragment()
-            fragment.arguments = makeArguments()
-            fragment.listener = parent.listener
-            fragment.show(parent.fragmentManager, tag)
-        }
-
-        protected val context: Context get() = parent.context
-    }
-
-    /**
-     * ダイアログクリックリスナの実装
+     * ダイアログのボタンクリックを [DialogListener] へ通知するロジック
      */
     protected open class DialogItemClickListener(
         /**
@@ -249,7 +56,7 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
          * ダイアログのリスナ
          */
         @JvmField
-        protected val listener: Listener
+        protected val listener: DialogListener
     ) : DialogInterface.OnClickListener {
         /**
          * 押された項目
@@ -258,7 +65,7 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
         protected var which = 0
 
         /**
-         * ボタン押下時に [Listener.onDialogResult] へ入力する [Intent] を生成して返します。
+         * ボタン押下時に [DialogListener.onDialogResult] へ入力する [Intent] を生成して返します。
          *
          * @return [Intent]
          */
@@ -299,12 +106,19 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
                 Log.e(TAG, "Exception", e)
             }
         }
+
+        companion object {
+            /**
+             * Tag for log
+             */
+            private const val TAG = "DialogItemClickListener"
+        }
     }
 
     /**
      * リスナ
      */
-    protected lateinit var listener: Listener
+    lateinit var listener: DialogListener
 
     /**
      * リクエストコードを取得します。
@@ -322,7 +136,7 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
      */
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is Listener) {
+        if (context is DialogListener) {
             listener = context
         }
     }
@@ -336,7 +150,7 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
     @Suppress("deprecation")
     override fun onAttach(activity: Activity) {
         super.onAttach(activity)
-        if (activity is Listener) {
+        if (activity is DialogListener) {
             listener = activity
         }
     }

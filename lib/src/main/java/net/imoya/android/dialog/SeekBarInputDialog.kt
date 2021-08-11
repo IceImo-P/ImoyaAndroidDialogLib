@@ -20,24 +20,21 @@ import net.imoya.android.util.Log
 /**
  * シークバー付き、数値入力ダイアログ
  *
- *
  * タイトル, メッセージ, シークバー, 入力欄, OKボタン, キャンセルボタンを持つダイアログ [Fragment] です。
- *  * 親画面は [DialogBase.Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
  *  * [Builder]を使用して表示内容を設定し、 [Builder.show] メソッドをコールして表示してください。
- *  * ダイアログ終了時 [DialogBase.Listener.onDialogResult] メソッドがコールされます。
- *  * OKボタン押下に伴うダイアログ終了時、 [DialogBase.Listener.onDialogResult] メソッドの引数
+ *  * ダイアログ終了時 [DialogListener.onDialogResult] メソッドがコールされます。
+ *  * OKボタン押下に伴うダイアログ終了時、 [DialogListener.onDialogResult] メソッドの引数
  *  resultCode の値が [Activity.RESULT_OK] となります。このとき、引数 data の [Intent.getIntExtra] へ
  * [SeekBarInputDialog.EXTRA_KEY_INPUT_VALUE], 0 を入力することで、入力された値を取得できます。
  *  * OKボタン押下以外の理由でダイアログが終了した場合は、
- * [DialogBase.Listener.onDialogResult] メソッドの引数 resultCode の値が
+ * [DialogListener.onDialogResult] メソッドの引数 resultCode の値が
  * [Activity.RESULT_CANCELED] となります。
- *
  */
 open class SeekBarInputDialog : OkCancelDialog(), OnSeekBarChangeListener, TextWatcher {
     /**
      * ダイアログビルダ
      */
-    open class Builder(parent: BuilderParent, requestCode: Int) :
+    open class Builder(parent: DialogParent, requestCode: Int) :
         OkCancelDialog.Builder(parent, requestCode) {
         /**
          * レイアウトリソースID
@@ -198,13 +195,10 @@ open class SeekBarInputDialog : OkCancelDialog(), OnSeekBarChangeListener, TextW
     /**
      * ボタンクリックリスナの実装
      */
-    private class DialogButtonClickListener(dialog: SeekBarInputDialog, listener: Listener) :
-        OkCancelDialog.DialogButtonClickListener(dialog, listener) {
-        /**
-         * ボタン押下時に [DialogBase.Listener.onDialogResult] へ入力する [Intent] を生成して返します。
-         *
-         * @return [Intent]
-         */
+    private class DialogButtonClickListener(
+        dialog: SeekBarInputDialog,
+        listener: DialogListener
+    ) : OkCancelDialog.DialogButtonClickListener(dialog, listener) {
         override fun makeData(): Intent {
             val intent = super.makeData()
             intent.putExtra(EXTRA_KEY_INPUT_VALUE, (dialog as SeekBarInputDialog).value)
