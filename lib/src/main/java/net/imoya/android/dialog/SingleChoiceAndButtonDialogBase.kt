@@ -10,7 +10,6 @@ import android.widget.Button
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import net.imoya.android.dialog.SingleChoiceAndButtonDialogBase.Builder
 
@@ -18,14 +17,13 @@ import net.imoya.android.dialog.SingleChoiceAndButtonDialogBase.Builder
  * 追加ボタン付き単一項目選択ダイアログの abstract
  *
  * タイトル, 単一選択リスト, 追加ボタン, OKボタン, キャンセルボタンを持つダイアログ [Fragment] の abstract です。
- *  * 親画面は [DialogBase.Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
  *  * [Builder]を使用して表示内容を設定し、 [Builder.show] メソッドをコールして表示してください。
- *  * ダイアログ終了時 [DialogBase.Listener.onDialogResult] メソッドがコールされます。
- *  * OKボタン押下に伴うダイアログ終了時、 [DialogBase.Listener.onDialogResult] メソッドの引数
+ *  * ダイアログ終了時 [DialogListener.onDialogResult] メソッドがコールされます。
+ *  * OKボタン押下に伴うダイアログ終了時、 [DialogListener.onDialogResult] メソッドの引数
  *  resultCode の値が [Activity.RESULT_OK] となります。このとき、引数 data の [Intent.getIntExtra] へ
  * [DialogBase.EXTRA_KEY_WHICH] を入力することで、選択された項目の位置(又は、未選択を表す -1)を取得できます。
  *  * OKボタン押下以外の理由でダイアログが終了した場合は、
- * [DialogBase.Listener.onDialogResult] メソッドの引数 resultCode の値が
+ * [DialogListener.onDialogResult] メソッドの引数 resultCode の値が
  * [Activity.RESULT_CANCELED] となります。
  *  * 追加ボタンクリック時の処理は、このクラスの派生クラスを作成し、
  * [SingleChoiceAndButtonDialogBase.onClickAdditionalButton] メソッドを override して実装してください。
@@ -36,7 +34,7 @@ abstract class SingleChoiceAndButtonDialogBase : SingleChoiceDialogBase(),
     /**
      * ダイアログビルダ
      */
-    open class Builder(parent: BuilderParent, requestCode: Int) :
+    open class Builder(parent: DialogParent, requestCode: Int) :
         SingleChoiceDialogBase.Builder(parent, requestCode) {
         /**
          * 追加ボタン文言
@@ -134,11 +132,6 @@ abstract class SingleChoiceAndButtonDialogBase : SingleChoiceDialogBase(),
             return this
         }
 
-        /**
-         * ダイアログへ渡す引数を生成して返します。
-         *
-         * @return 引数を含んだ [Bundle]
-         */
         override fun makeArguments(): Bundle {
             val arguments = super.makeArguments()
             arguments.putString(KEY_ADDITIONAL_BUTTON_TEXT, additionalButtonText)
@@ -146,12 +139,6 @@ abstract class SingleChoiceAndButtonDialogBase : SingleChoiceDialogBase(),
         }
     }
 
-    /**
-     * ダイアログ生成処理
-     *
-     * @param savedInstanceState 前回強制終了時の保存データ
-     * @return 生成した [Dialog]
-     */
     override fun createDialog(savedInstanceState: Bundle?): Dialog {
         val arguments = requireArguments()
         val builder = AlertDialog.Builder(

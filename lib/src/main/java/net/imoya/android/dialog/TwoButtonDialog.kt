@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import net.imoya.android.dialog.TwoButtonDialog.Builder
 
@@ -13,22 +12,21 @@ import net.imoya.android.dialog.TwoButtonDialog.Builder
  * ボタン2個のダイアログ
  *
  * タイトル, メッセージ, positive ボタン, negative ボタンを持つダイアログ [Fragment] です。
- *  * 親画面は [DialogBase.Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
  *  * [Builder]を使用して表示内容を設定し、 [Builder.show] メソッドをコールして表示してください。
- *  * ダイアログ終了時 [DialogBase.Listener.onDialogResult] メソッドがコールされます。
- *  * positive ボタン押下に伴うダイアログ終了時、 [DialogBase.Listener.onDialogResult] メソッドの引数
+ *  * ダイアログ終了時 [DialogListener.onDialogResult] メソッドがコールされます。
+ *  * positive ボタン押下に伴うダイアログ終了時、 [DialogListener.onDialogResult] メソッドの引数
  *  resultCode の値が [Activity.RESULT_OK] となります。このとき、引数 data の [Intent.getIntExtra] へ
  * [DialogBase.EXTRA_KEY_WHICH] を入力することで、クリックされたボタンの種類を取得できます。
  *  * positive ボタン押下以外の理由でダイアログが終了した場合、
- * [DialogBase.Listener.onDialogResult] メソッドの引数 resultCode の値が
+ * [DialogListener.onDialogResult] メソッドの引数 resultCode の値が
  * [Activity.RESULT_CANCELED] となります。
  */
 open class TwoButtonDialog : DialogBase() {
     /**
      * ダイアログビルダ
      */
-    open class Builder(parent: BuilderParent, requestCode: Int) :
-        DialogBase.Builder(parent, requestCode) {
+    open class Builder(parent: DialogParent, requestCode: Int) :
+        DialogBuilder(parent, requestCode) {
         /**
          * positive ボタン文言
          */

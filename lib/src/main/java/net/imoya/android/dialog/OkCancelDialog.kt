@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import net.imoya.android.dialog.OkCancelDialog.Builder
 
@@ -13,22 +12,20 @@ import net.imoya.android.dialog.OkCancelDialog.Builder
  * OKボタン、キャンセルボタンを持つダイアログ
  *
  * タイトル, メッセージ, OKボタン, キャンセルボタンを持つダイアログ [Fragment] です。
- *  * 親画面は [DialogBase.Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
  *  * [Builder]を使用して表示内容を設定し、 [Builder.show] メソッドをコールして表示してください。
- *  * ダイアログ終了時 [DialogBase.Listener.onDialogResult] メソッドがコールされます。
- *  * OKボタン押下に伴うダイアログ終了時、 [DialogBase.Listener.onDialogResult] メソッドの引数
+ *  * ダイアログ終了時 [DialogListener.onDialogResult] メソッドがコールされます。
+ *  * OKボタン押下に伴うダイアログ終了時、 [DialogListener.onDialogResult] メソッドの引数
  *  resultCode の値が [Activity.RESULT_OK] となります。
  *  * OKボタン押下以外の理由でダイアログが終了した場合は、
- * [DialogBase.Listener.onDialogResult] メソッドの引数 resultCode の値が
+ * [DialogListener.onDialogResult] メソッドの引数 resultCode の値が
  * [Activity.RESULT_CANCELED] となります。
  */
 open class OkCancelDialog : TwoButtonDialog() {
     /**
      * ダイアログビルダ
      */
-    open class Builder(parent: BuilderParent, requestCode: Int) :
+    open class Builder(parent: DialogParent, requestCode: Int) :
         TwoButtonDialog.Builder(parent, requestCode) {
-
         /**
          * タイトル文言を設定します。
          *
@@ -97,8 +94,10 @@ open class OkCancelDialog : TwoButtonDialog() {
     /**
      * ボタンクリックリスナの実装
      */
-    protected open class DialogButtonClickListener(dialog: OkCancelDialog, listener: Listener) :
-        DialogItemClickListener(dialog, listener) {
+    protected open class DialogButtonClickListener(
+        dialog: OkCancelDialog,
+        listener: DialogListener
+    ) : DialogItemClickListener(dialog, listener) {
         /**
          * 親画面へ通知する結果コードを返します。
          *
@@ -106,7 +105,8 @@ open class OkCancelDialog : TwoButtonDialog() {
          * @return 結果コード
          */
         private fun getResultCode(which: Int): Int {
-            return if (which == AlertDialog.BUTTON_POSITIVE) Activity.RESULT_OK else Activity.RESULT_CANCELED
+            return if (which == AlertDialog.BUTTON_POSITIVE) Activity.RESULT_OK
+            else Activity.RESULT_CANCELED
         }
 
         /**
@@ -138,6 +138,9 @@ open class OkCancelDialog : TwoButtonDialog() {
     }
 
 //    companion object {
+//        /**
+//         * Tag for log
+//         */
 //        private const val TAG = "OkCancelDialog"
 //    }
 }

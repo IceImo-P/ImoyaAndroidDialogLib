@@ -13,14 +13,13 @@ import net.imoya.android.util.LogUtil
  * 単一項目選択ダイアログの abstract
  *
  * タイトル, 単一選択リスト, OKボタン, キャンセルボタンを持つダイアログ [Fragment] の abstract です。
- *  * 親画面は [DialogBase.Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
  *  * [Builder]を使用して表示内容を設定し、 [Builder.show] メソッドをコールして表示してください。
- *  * ダイアログ終了時 [DialogBase.Listener.onDialogResult] メソッドがコールされます。
- *  * OKボタン押下に伴うダイアログ終了時、 [DialogBase.Listener.onDialogResult] メソッドの引数
+ *  * ダイアログ終了時 [DialogListener.onDialogResult] メソッドがコールされます。
+ *  * OKボタン押下に伴うダイアログ終了時、 [DialogListener.onDialogResult] メソッドの引数
  *  resultCode の値が [Activity.RESULT_OK] となります。このとき、引数 data の [Intent.getIntExtra] へ
  *  [DialogBase.EXTRA_KEY_WHICH] を入力することで、選択された項目の位置(又は未選択を表す -1)を取得できます。
  *  * OKボタン押下以外の理由でダイアログが終了した場合は、
- * [DialogBase.Listener.onDialogResult] メソッドの引数 resultCode の値が
+ * [DialogListener.onDialogResult] メソッドの引数 resultCode の値が
  * [Activity.RESULT_CANCELED] となります。
  */
 abstract class SingleChoiceDialogBase : OkCancelDialog() {
@@ -31,11 +30,11 @@ abstract class SingleChoiceDialogBase : OkCancelDialog() {
     /**
      * コンストラクタ
      *
-     * @param parent    親画面となる [AppCompatActivity]
+     * @param parent    親画面
      * @param requestCode リクエストコード
      */
         (
-        parent: BuilderParent, requestCode: Int
+        parent: DialogParent, requestCode: Int
     ) : OkCancelDialog.Builder(parent, requestCode) {
         /**
          * 選択項目リスト
@@ -142,10 +141,13 @@ abstract class SingleChoiceDialogBase : OkCancelDialog() {
     /**
      * ボタンクリックリスナの実装
      */
-    protected class DialogButtonClickListener(dialog: SingleChoiceDialogBase, listener: Listener) :
+    protected class DialogButtonClickListener(
+        dialog: SingleChoiceDialogBase,
+        listener: DialogListener
+    ) :
         OkCancelDialog.DialogButtonClickListener(dialog, listener) {
         /**
-         * ボタン押下時に [DialogBase.Listener.onDialogResult] へ入力する [Intent] を生成して返します。
+         * ボタン押下時に [DialogListener.onDialogResult] へ入力する [Intent] を生成して返します。
          *
          * @return [Intent]
          */

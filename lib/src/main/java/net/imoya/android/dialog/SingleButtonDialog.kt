@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import net.imoya.android.dialog.SingleButtonDialog.Builder
 
@@ -12,21 +11,20 @@ import net.imoya.android.dialog.SingleButtonDialog.Builder
  * ボタン1個のダイアログ
  *
  * タイトル, メッセージ, 1個のボタンを持つダイアログ [Fragment] です。
- *  * 親画面は [DialogBase.Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
  *  * [Builder] を使用して表示内容を設定し、 [Builder.show] メソッドをコールして表示してください。
- *  * ダイアログ終了時 [DialogBase.Listener.onDialogResult] メソッドがコールされます。
- *  * ボタン押下に伴うダイアログ終了時、 [DialogBase.Listener.onDialogResult] メソッドの引数
+ *  * ダイアログ終了時 [DialogListener.onDialogResult] メソッドがコールされます。
+ *  * ボタン押下に伴うダイアログ終了時、 [DialogListener.onDialogResult] メソッドの引数
  *  resultCode の値が [Activity.RESULT_OK] となります。
  *  * ボタン押下以外の理由でダイアログが終了した場合、
- * [DialogBase.Listener.onDialogResult] メソッドの引数 resultCode の値が
+ * [DialogListener.onDialogResult] メソッドの引数 resultCode の値が
  * [Activity.RESULT_CANCELED] となります。
  */
 open class SingleButtonDialog : DialogBase() {
     /**
      * ダイアログビルダ
      */
-    open class Builder(parent: BuilderParent, requestCode: Int) :
-        DialogBase.Builder(parent, requestCode) {
+    open class Builder(parent: DialogParent, requestCode: Int) :
+        DialogBuilder(parent, requestCode) {
         /**
          * ボタン文言
          */
@@ -104,12 +102,6 @@ open class SingleButtonDialog : DialogBase() {
         }
     }
 
-    /**
-     * ダイアログ生成処理
-     *
-     * @param savedInstanceState 前回強制終了時の保存データ
-     * @return 生成した [Dialog]
-     */
     public override fun createDialog(savedInstanceState: Bundle?): Dialog {
         val arguments = requireArguments()
         return AlertDialog.Builder(requireActivity(), this.theme)

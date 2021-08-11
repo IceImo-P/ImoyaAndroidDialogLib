@@ -15,27 +15,24 @@ import net.imoya.android.dialog.NumberInputDialog.Builder
 /**
  * 整数値入力ダイアログ
  *
- *
  * タイトル, メッセージ, 数値入力欄, 単位表示, OKボタン, キャンセルボタンを持つダイアログ [Fragment] です。
- *  * 親画面は [DialogBase.Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
  *  * [Builder]を使用して表示内容を設定し、 [Builder.show] メソッドをコールして表示してください。
- *  * ダイアログ終了時 [DialogBase.Listener.onDialogResult] メソッドがコールされます。
- *  * OKボタン押下に伴うダイアログ終了時、 [DialogBase.Listener.onDialogResult] メソッドの引数
+ *  * ダイアログ終了時 [DialogListener.onDialogResult] メソッドがコールされます。
+ *  * OKボタン押下に伴うダイアログ終了時、 [DialogListener.onDialogResult] メソッドの引数
  *  resultCode の値が [Activity.RESULT_OK] となります。このとき、引数 data の [Intent.getIntExtra] へ
  * [InputDialog.EXTRA_KEY_INPUT_VALUE] を入力することで、入力された整数値を取得できます。
  * 但し空文字を入力されたか、数字以外の文字を入力された場合は、 [InputDialog.EXTRA_KEY_INPUT_VALUE]
  * の extra が存在しません([Intent.hasExtra] で判定してください)。
  *  * OKボタン押下以外の理由でダイアログが終了した場合は、
- * [DialogBase.Listener.onDialogResult] メソッドの引数 resultCode の値が
+ * [DialogListener.onDialogResult] メソッドの引数 resultCode の値が
  * [Activity.RESULT_CANCELED] となります。
- *
  */
 @Suppress("unused")
 class NumberInputDialog : InputDialog() {
     /**
      * ダイアログビルダ
      */
-    open class Builder(parent: BuilderParent, requestCode: Int) :
+    open class Builder(parent: DialogParent, requestCode: Int) :
         InputDialog.Builder(parent, requestCode) {
         /**
          * 入力初期値
@@ -201,13 +198,9 @@ class NumberInputDialog : InputDialog() {
     /**
      * ボタンクリックリスナの実装
      */
-    private class DialogButtonClickListener(dialog: NumberInputDialog, listener: Listener) :
-        InputDialog.DialogButtonClickListener(dialog, listener) {
-        /**
-         * ボタン押下時に [DialogBase.Listener.onDialogResult] へ入力する [Intent] を生成して返します。
-         *
-         * @return [Intent]
-         */
+    private class DialogButtonClickListener(
+        dialog: NumberInputDialog, listener: DialogListener
+    ) : InputDialog.DialogButtonClickListener(dialog, listener) {
         override fun makeData(): Intent {
             val intent = super.makeData()
             val dialog = dialog as NumberInputDialog

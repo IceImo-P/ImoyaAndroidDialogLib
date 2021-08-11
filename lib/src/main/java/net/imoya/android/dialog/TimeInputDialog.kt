@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.TimePicker
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import net.imoya.android.dialog.TimeInputDialog.Builder
 import net.imoya.android.util.Log
@@ -17,15 +16,14 @@ import net.imoya.android.util.TimePickerHelper
  * 時刻入力ダイアログ
  *
  * タイトル, メッセージ, 時刻入力欄([TimePicker]), OKボタン, キャンセルボタンを持つダイアログ [Fragment] です。
- *  * 親画面は [DialogBase.Listener] を実装した [Fragment] 又は [AppCompatActivity] を想定しています。
  *  * [Builder]を使用して表示内容を設定し、 [Builder.show] メソッドをコールして表示してください。
- *  * ダイアログ終了時 [DialogBase.Listener.onDialogResult] メソッドがコールされます。
- *  * OKボタン押下に伴うダイアログ終了時、 [DialogBase.Listener.onDialogResult] メソッドの引数
+ *  * ダイアログ終了時 [DialogListener.onDialogResult] メソッドがコールされます。
+ *  * OKボタン押下に伴うダイアログ終了時、 [DialogListener.onDialogResult] メソッドの引数
  *  resultCode の値が [Activity.RESULT_OK] となります。このとき、引数 data の [Intent.getIntExtra] へ
  * [TimeInputDialog.EXTRA_KEY_HOUR] を入力することで時刻(時、0-23)を、
  * [TimeInputDialog.EXTRA_KEY_MINUTE] を入力することで時刻(分、0-60)を取得できます。
  *  * OKボタン押下以外の理由でダイアログが終了した場合は、
- * [DialogBase.Listener.onDialogResult] メソッドの引数 resultCode の値が
+ * [DialogListener.onDialogResult] メソッドの引数 resultCode の値が
  * [Activity.RESULT_CANCELED] となります。
  */
 @Suppress("unused")
@@ -33,8 +31,8 @@ open class TimeInputDialog : OkCancelDialog() {
     /**
      * ダイアログビルダ
      */
-    open class Builder(parent: BuilderParent, requestCode: Int) :
-        DialogBase.Builder(parent, requestCode) {
+    open class Builder(parent: DialogParent, requestCode: Int) :
+        DialogBuilder(parent, requestCode) {
         /**
          * positive ボタン文言
          */
@@ -195,10 +193,13 @@ open class TimeInputDialog : OkCancelDialog() {
     /**
      * ボタンクリックリスナの実装
      */
-    protected open class DialogButtonClickListener(dialog: TimeInputDialog, listener: Listener) :
+    protected open class DialogButtonClickListener(
+        dialog: TimeInputDialog,
+        listener: DialogListener
+    ) :
         OkCancelDialog.DialogButtonClickListener(dialog, listener) {
         /**
-         * ボタン押下時に [DialogBase.Listener.onDialogResult] へ入力する [Intent] を生成して返します。
+         * ボタン押下時に [DialogListener.onDialogResult] へ入力する [Intent] を生成して返します。
          *
          * @return [Intent]
          */
@@ -220,14 +221,11 @@ open class TimeInputDialog : OkCancelDialog() {
         }
     }
 
+    /**
+     * [TimePicker]
+     */
     private lateinit var timePicker: TimePicker
 
-    /**
-     * ダイアログ生成処理
-     *
-     * @param savedInstanceState 前回強制終了時の保存データ
-     * @return 生成した [Dialog]
-     */
     override fun createDialog(savedInstanceState: Bundle?): Dialog {
         val buttonClickListener = DialogButtonClickListener(
             this, listener
