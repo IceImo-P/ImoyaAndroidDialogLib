@@ -32,6 +32,9 @@ import net.imoya.android.util.Log
 open class SeekBarAndButtonDialog : SeekBarInputDialog(), View.OnClickListener {
     /**
      * ダイアログビルダ
+     *
+     * @param parent    親画面
+     * @param requestCode リクエストコード
      */
     open class Builder(parent: DialogParent, requestCode: Int) :
         SeekBarInputDialog.Builder(parent, requestCode) {

@@ -24,6 +24,9 @@ import net.imoya.android.dialog.TwoButtonDialog.Builder
 open class TwoButtonDialog : DialogBase() {
     /**
      * ダイアログビルダ
+     *
+     * @param parent    親画面
+     * @param requestCode リクエストコード
      */
     open class Builder(parent: DialogParent, requestCode: Int) :
         DialogBuilder(parent, requestCode) {

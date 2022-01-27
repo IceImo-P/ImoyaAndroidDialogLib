@@ -23,6 +23,9 @@ import net.imoya.android.dialog.OkCancelDialog.Builder
 open class OkCancelDialog : TwoButtonDialog() {
     /**
      * ダイアログビルダ
+     *
+     * @param parent    親画面
+     * @param requestCode リクエストコード
      */
     open class Builder(parent: DialogParent, requestCode: Int) :
         TwoButtonDialog.Builder(parent, requestCode) {

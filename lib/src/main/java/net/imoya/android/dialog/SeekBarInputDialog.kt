@@ -33,6 +33,9 @@ import net.imoya.android.util.Log
 open class SeekBarInputDialog : OkCancelDialog(), OnSeekBarChangeListener, TextWatcher {
     /**
      * ダイアログビルダ
+     *
+     * @param parent    親画面
+     * @param requestCode リクエストコード
      */
     open class Builder(parent: DialogParent, requestCode: Int) :
         OkCancelDialog.Builder(parent, requestCode) {

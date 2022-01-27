@@ -29,6 +29,9 @@ import net.imoya.android.dialog.TextInputDialog.Builder
 class TextInputDialog : InputDialog() {
     /**
      * ダイアログビルダ
+     *
+     * @param parent    親画面
+     * @param requestCode リクエストコード
      */
     open class Builder(parent: DialogParent, requestCode: Int) :
         InputDialog.Builder(parent, requestCode) {

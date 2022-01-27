@@ -19,6 +19,9 @@ import java.util.*
 abstract class InputDialog : OkCancelDialog() {
     /**
      * ダイアログビルダ
+     *
+     * @param parent    親画面
+     * @param requestCode リクエストコード
      */
     abstract class Builder(parent: DialogParent, requestCode: Int) :
         OkCancelDialog.Builder(parent, requestCode) {
