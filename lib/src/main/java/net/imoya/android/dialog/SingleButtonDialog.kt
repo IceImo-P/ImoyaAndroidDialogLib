@@ -22,6 +22,9 @@ import net.imoya.android.dialog.SingleButtonDialog.Builder
 open class SingleButtonDialog : DialogBase() {
     /**
      * ダイアログビルダ
+     *
+     * @param parent    親画面
+     * @param requestCode リクエストコード
      */
     open class Builder(parent: DialogParent, requestCode: Int) :
         DialogBuilder(parent, requestCode) {

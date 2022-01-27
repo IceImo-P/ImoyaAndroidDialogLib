@@ -3,6 +3,14 @@ package net.imoya.android.dialog
 import android.content.Context
 import android.os.Bundle
 
+/**
+ * ダイアログビルダの基底クラス
+ *
+ * @see [DialogBase]
+ *
+ * @param parent    親画面
+ * @param requestCode リクエストコード
+ */
 abstract class DialogBuilder(
     /**
      * 親画面

@@ -27,6 +27,9 @@ import net.imoya.android.dialog.MultiChoiceDialog.Builder
 class MultiChoiceDialog : MultiChoiceDialogBase() {
     /**
      * ダイアログビルダ
+     *
+     * @param parent    親画面
+     * @param requestCode リクエストコード
      */
     open class Builder(parent: DialogParent, requestCode: Int) :
         MultiChoiceDialogBase.Builder(parent, requestCode) {

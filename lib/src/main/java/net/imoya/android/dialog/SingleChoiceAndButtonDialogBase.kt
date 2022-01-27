@@ -33,8 +33,11 @@ abstract class SingleChoiceAndButtonDialogBase : SingleChoiceDialogBase(),
     RadioGroup.OnCheckedChangeListener, View.OnClickListener {
     /**
      * ダイアログビルダ
+     *
+     * @param parent    親画面
+     * @param requestCode リクエストコード
      */
-    open class Builder(parent: DialogParent, requestCode: Int) :
+    abstract class Builder(parent: DialogParent, requestCode: Int) :
         SingleChoiceDialogBase.Builder(parent, requestCode) {
         /**
          * 追加ボタン文言

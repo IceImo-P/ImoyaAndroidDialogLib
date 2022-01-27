@@ -3,7 +3,6 @@ package net.imoya.android.dialog
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import net.imoya.android.dialog.SingleChoiceDialogBase.Builder
 import net.imoya.android.util.Log
@@ -25,17 +24,12 @@ import net.imoya.android.util.LogUtil
 abstract class SingleChoiceDialogBase : OkCancelDialog() {
     /**
      * ダイアログビルダ
-     */
-    abstract class Builder
-    /**
-     * コンストラクタ
      *
      * @param parent    親画面
      * @param requestCode リクエストコード
      */
-        (
-        parent: DialogParent, requestCode: Int
-    ) : OkCancelDialog.Builder(parent, requestCode) {
+    abstract class Builder(parent: DialogParent, requestCode: Int) :
+        OkCancelDialog.Builder(parent, requestCode) {
         /**
          * 選択項目リスト
          */

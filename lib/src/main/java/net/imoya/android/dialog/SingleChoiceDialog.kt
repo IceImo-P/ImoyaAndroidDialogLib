@@ -27,6 +27,9 @@ import net.imoya.android.dialog.SingleChoiceDialog.Builder
 class SingleChoiceDialog : SingleChoiceDialogBase() {
     /**
      * ダイアログビルダ
+     *
+     * @param parent    親画面
+     * @param requestCode リクエストコード
      */
     class Builder(parent: DialogParent, requestCode: Int) :
         SingleChoiceDialogBase.Builder(parent, requestCode) {

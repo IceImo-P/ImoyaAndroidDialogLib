@@ -29,6 +29,9 @@ import net.imoya.android.dialog.SingleButtonAndCheckDialog.Builder
 open class SingleButtonAndCheckDialog : SingleButtonDialog() {
     /**
      * ダイアログビルダ
+     *
+     * @param parent    親画面
+     * @param requestCode リクエストコード
      */
     open class Builder(parent: DialogParent, requestCode: Int) :
         SingleButtonDialog.Builder(parent, requestCode) {
