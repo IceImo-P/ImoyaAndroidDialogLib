@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.LayoutRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import net.imoya.android.dialog.NumberInputDialog.Builder
 

@@ -147,6 +147,7 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
      *
      * @param activity [Activity]
      */
+    @Deprecated("Deprecated in Java")
     @Suppress("deprecation")
     override fun onAttach(activity: Activity) {
         super.onAttach(activity)
