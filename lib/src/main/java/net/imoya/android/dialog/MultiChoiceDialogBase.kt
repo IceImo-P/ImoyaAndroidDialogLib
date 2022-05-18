@@ -198,31 +198,29 @@ abstract class MultiChoiceDialogBase : OkCancelDialog() {
         val tmpCheckedList = if (savedInstanceState != null) savedInstanceState.getBooleanArray(
             EXTRA_KEY_CHECKED_LIST
         ) else arguments.getBooleanArray(EXTRA_KEY_CHECKED_LIST)
-        Log.d(TAG, "onCreate: tmpCheckedList = ${LogUtil.logString(tmpCheckedList)}")
+        Log.d(TAG) { "onCreate: tmpCheckedList = ${LogUtil.logString(tmpCheckedList)}" }
         if (tmpCheckedList != null && tmpCheckedList.size != items.size) {
             // チェック状態指定が選択項目数と異なる場合は、警告ログを出力する
-            Log.w(
-                TAG,
+            Log.w(TAG) {
                 "onCreate: Illegal checked list length(Item count is ${
                     items.size
                 } but checked list count is ${
                     tmpCheckedList.size
                 })"
-            )
+            }
         }
         // 参照する引数の変化を防ぐため、必ずcloneする
         // 引数が存在しない場合や項目数が異なる場合は、リストを新規作成する
         checkedList =
             if (tmpCheckedList != null && tmpCheckedList.size == items.size) tmpCheckedList.clone()
             else BooleanArray(items.size)
-        Log.d(
-            TAG,
+        Log.d(TAG) {
             "onCreate: items = ${
                 LogUtil.logString(items)
             }, checkedList = ${
                 LogUtil.logString(checkedList)
             }"
-        )
+        }
     }
 
     /**

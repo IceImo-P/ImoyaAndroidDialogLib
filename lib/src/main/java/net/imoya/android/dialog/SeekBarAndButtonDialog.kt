@@ -10,7 +10,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.SeekBar
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import net.imoya.android.dialog.SeekBarAndButtonDialog.Builder
 import net.imoya.android.util.Log

@@ -186,15 +186,14 @@ abstract class SingleChoiceDialogBase : OkCancelDialog() {
             ?: arguments.getInt(EXTRA_KEY_WHICH, -1)
         if (selectedPosition < -1 || selectedPosition >= items.size) {
             // 異常値の場合は、未選択とする
-            Log.w(TAG, "onCreate: Illegal position($selectedPosition)")
+            Log.w(TAG) { "onCreate: Illegal position($selectedPosition)" }
             selectedPosition = -1
         }
-        Log.d(
-            TAG,
+        Log.d(TAG) {
             "onCreate: items = ${
                 LogUtil.logString(items)
             }, selectedPosition = $selectedPosition"
-        )
+        }
     }
 
     /**

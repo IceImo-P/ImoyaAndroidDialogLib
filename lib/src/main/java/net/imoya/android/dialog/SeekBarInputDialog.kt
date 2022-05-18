@@ -1,5 +1,6 @@
 package net.imoya.android.dialog
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
@@ -12,7 +13,6 @@ import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import net.imoya.android.dialog.SeekBarInputDialog.Builder
 import net.imoya.android.util.Log
@@ -293,10 +293,10 @@ open class SeekBarInputDialog : OkCancelDialog(), OnSeekBarChangeListener, TextW
     override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
     override fun afterTextChanged(s: Editable) {
-        Log.d(TAG, "afterTextChanged: inCorrect = $inCorrect")
+        Log.d(TAG) { "afterTextChanged: inCorrect = $inCorrect" }
         if (!inCorrect) {
             inCorrect = true
-            Log.d(TAG, "afterTextChanged: s = $s")
+            Log.d(TAG) { "afterTextChanged: s = $s" }
             if (s.isEmpty()) {
                 // 空文字の場合は最小値扱いとする
                 seekBar.progress = 0
@@ -322,12 +322,13 @@ open class SeekBarInputDialog : OkCancelDialog(), OnSeekBarChangeListener, TextW
                 seekBar.progress = value - min
             }
             inCorrect = false
-            Log.d(TAG, "afterTextChanged: end")
+            Log.v(TAG, "afterTextChanged: end")
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-        Log.d(TAG, "onProgressChanged: progress = $progress, fromUser = $fromUser")
+        Log.d(TAG) { "onProgressChanged: progress = $progress, fromUser = $fromUser" }
         if (fromUser) {
             editText.setText((progress + min).toString())
         }
