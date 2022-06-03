@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2022 IceImo-P
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package net.imoya.android.dialog
 
 import android.app.Activity
@@ -5,8 +21,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import net.imoya.android.dialog.SingleChoiceDialogBase.Builder
-import net.imoya.android.util.Log
-import net.imoya.android.util.LogUtil
+import net.imoya.android.log.LogUtil
 
 /**
  * 単一項目選択ダイアログの abstract
@@ -186,10 +201,10 @@ abstract class SingleChoiceDialogBase : OkCancelDialog() {
             ?: arguments.getInt(EXTRA_KEY_WHICH, -1)
         if (selectedPosition < -1 || selectedPosition >= items.size) {
             // 異常値の場合は、未選択とする
-            Log.w(TAG) { "onCreate: Illegal position($selectedPosition)" }
+            DialogLog.w(TAG) { "onCreate: Illegal position($selectedPosition)" }
             selectedPosition = -1
         }
-        Log.d(TAG) {
+        DialogLog.v(TAG) {
             "onCreate: items = ${
                 LogUtil.logString(items)
             }, selectedPosition = $selectedPosition"

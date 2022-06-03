@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2022 IceImo-P
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package net.imoya.android.dialog
 
 import android.app.Activity
@@ -9,7 +25,6 @@ import android.widget.TimePicker
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import net.imoya.android.dialog.TimeInputDialog.Builder
-import net.imoya.android.util.Log
 import net.imoya.android.util.TimePickerHelper
 
 /**
@@ -212,7 +227,7 @@ open class TimeInputDialog : OkCancelDialog() {
             val pickerHelper = TimePickerHelper(dialog.timePicker)
             data.putExtra(EXTRA_KEY_HOUR, pickerHelper.getHour())
             data.putExtra(EXTRA_KEY_MINUTE, pickerHelper.getMinute())
-            Log.d(TAG) {
+            DialogLog.d(TAG) {
                 "makeData: hour = ${
                     data.getIntExtra(EXTRA_KEY_HOUR, -1)
                 } minute = ${
