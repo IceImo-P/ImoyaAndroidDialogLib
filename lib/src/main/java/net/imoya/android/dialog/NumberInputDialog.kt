@@ -217,8 +217,8 @@ class NumberInputDialog : InputDialog() {
      * ボタンクリックリスナの実装
      */
     private class DialogButtonClickListener(
-        dialog: NumberInputDialog, listener: DialogListener
-    ) : InputDialog.DialogButtonClickListener(dialog, listener) {
+        dialog: NumberInputDialog
+    ) : InputDialog.DialogButtonClickListener(dialog) {
         override fun makeData(): Intent {
             val intent = super.makeData()
             val dialog = dialog as NumberInputDialog
@@ -270,7 +270,7 @@ class NumberInputDialog : InputDialog() {
      * @return [InputDialog.DialogButtonClickListener]
      */
     override val dialogButtonClickListener: InputDialog.DialogButtonClickListener
-        get() = DialogButtonClickListener(this, listener)
+        get() = DialogButtonClickListener(this)
 
     /**
      * ダイアログへ組み込む入力部分の [View]

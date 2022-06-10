@@ -210,9 +210,8 @@ abstract class InputDialog : OkCancelDialog() {
      * ボタンクリックリスナの実装
      */
     protected abstract class DialogButtonClickListener(
-        dialog: InputDialog,
-        listener: DialogListener
-    ) : OkCancelDialog.DialogButtonClickListener(dialog, listener)
+        dialog: InputDialog
+    ) : OkCancelDialog.DialogButtonClickListener(dialog)
 
     /**
      * ボタンクリック時の処理を実装した [DialogButtonClickListener] を返します。
@@ -286,7 +285,7 @@ abstract class InputDialog : OkCancelDialog() {
         val arguments = requireArguments()
         val buttonClickListener = dialogButtonClickListener
         val builder = AlertDialog.Builder(
-            requireActivity(), this.theme
+            requireContext(), this.theme
         )
             .setTitle(arguments.getString(KEY_TITLE))
             .setMessage(arguments.getString(KEY_MESSAGE))

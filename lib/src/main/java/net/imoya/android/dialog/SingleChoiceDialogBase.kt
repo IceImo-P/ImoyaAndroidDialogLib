@@ -151,10 +151,8 @@ abstract class SingleChoiceDialogBase : OkCancelDialog() {
      * ボタンクリックリスナの実装
      */
     protected class DialogButtonClickListener(
-        dialog: SingleChoiceDialogBase,
-        listener: DialogListener
-    ) :
-        OkCancelDialog.DialogButtonClickListener(dialog, listener) {
+        dialog: SingleChoiceDialogBase
+    ) : OkCancelDialog.DialogButtonClickListener(dialog) {
         /**
          * ボタン押下時に [DialogListener.onDialogResult] へ入力する [Intent] を生成して返します。
          *

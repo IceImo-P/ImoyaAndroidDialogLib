@@ -214,9 +214,8 @@ open class SeekBarInputDialog : OkCancelDialog(), OnSeekBarChangeListener, TextW
      * ボタンクリックリスナの実装
      */
     private class DialogButtonClickListener(
-        dialog: SeekBarInputDialog,
-        listener: DialogListener
-    ) : OkCancelDialog.DialogButtonClickListener(dialog, listener) {
+        dialog: SeekBarInputDialog
+    ) : OkCancelDialog.DialogButtonClickListener(dialog) {
         override fun makeData(): Intent {
             val intent = super.makeData()
             intent.putExtra(EXTRA_KEY_INPUT_VALUE, (dialog as SeekBarInputDialog).value)
@@ -271,17 +270,17 @@ open class SeekBarInputDialog : OkCancelDialog(), OnSeekBarChangeListener, TextW
         min = arguments.getInt(KEY_MIN, 0)
         max = arguments.getInt(KEY_MAX, 100)
         val builder = AlertDialog.Builder(
-            requireActivity(), this.theme
+            requireContext(), this.theme
         )
             .setTitle(arguments.getString(KEY_TITLE))
             .setMessage(arguments.getString(KEY_MESSAGE))
             .setPositiveButton(
                 arguments.getString(KEY_POSITIVE_BUTTON_TITLE),
-                DialogButtonClickListener(this, listener)
+                DialogButtonClickListener(this)
             )
             .setNegativeButton(
                 arguments.getString(KEY_NEGATIVE_BUTTON_TITLE),
-                DialogButtonClickListener(this, listener)
+                DialogButtonClickListener(this)
             )
         val view = LayoutInflater.from(builder.context).inflate(
             arguments.getInt(KEY_LAYOUT_RESOURCE_ID, R.layout.dialog_seekbar_input),

@@ -212,10 +212,8 @@ open class TimeInputDialog : OkCancelDialog() {
      * ボタンクリックリスナの実装
      */
     protected open class DialogButtonClickListener(
-        dialog: TimeInputDialog,
-        listener: DialogListener
-    ) :
-        OkCancelDialog.DialogButtonClickListener(dialog, listener) {
+        dialog: TimeInputDialog
+    ) : OkCancelDialog.DialogButtonClickListener(dialog) {
         /**
          * ボタン押下時に [DialogListener.onDialogResult] へ入力する [Intent] を生成して返します。
          *
@@ -244,17 +242,15 @@ open class TimeInputDialog : OkCancelDialog() {
     private lateinit var timePicker: TimePicker
 
     override fun createDialog(savedInstanceState: Bundle?): Dialog {
-        val buttonClickListener = DialogButtonClickListener(
-            this, listener
-        )
+        val buttonClickListener = DialogButtonClickListener(this)
         val arguments = requireArguments()
+        val hour = savedInstanceState?.getInt(EXTRA_KEY_HOUR) ?: arguments.getInt(EXTRA_KEY_HOUR)
+        val minute =
+            savedInstanceState?.getInt(EXTRA_KEY_MINUTE) ?: arguments.getInt(EXTRA_KEY_MINUTE)
         val view = LayoutInflater.from(requireContext())
             .inflate(R.layout.dialog_time_input, null)
         timePicker = view.findViewById(R.id.time)
-        TimePickerHelper(timePicker).setHourAndMinute(
-            arguments.getInt(EXTRA_KEY_HOUR),
-            arguments.getInt(EXTRA_KEY_MINUTE)
-        )
+        TimePickerHelper(timePicker).setHourAndMinute(hour, minute)
         timePicker.setIs24HourView(arguments.getBoolean(KEY_IS_24_HOUR_VIEW))
         return AlertDialog.Builder(requireContext(), this.theme)
             .setTitle(arguments.getString(KEY_TITLE, null))
@@ -267,6 +263,14 @@ open class TimeInputDialog : OkCancelDialog() {
                 arguments.getString(KEY_NEGATIVE_BUTTON_TITLE), buttonClickListener
             )
             .create()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        val picker = TimePickerHelper(timePicker)
+        outState.putInt(EXTRA_KEY_HOUR, picker.getHour())
+        outState.putInt(EXTRA_KEY_MINUTE, picker.getMinute())
     }
 
     companion object {

@@ -123,12 +123,12 @@ open class SingleButtonDialog : DialogBase() {
 
     public override fun createDialog(savedInstanceState: Bundle?): Dialog {
         val arguments = requireArguments()
-        return AlertDialog.Builder(requireActivity(), this.theme)
+        return AlertDialog.Builder(requireContext(), this.theme)
             .setTitle(arguments.getString(KEY_TITLE))
             .setMessage(arguments.getString(KEY_MESSAGE))
             .setPositiveButton(
                 arguments.getString(KEY_BUTTON_TITLE),
-                DialogItemClickListener(this, listener)
+                DialogItemClickListener(this)
             )
             .create()
     }

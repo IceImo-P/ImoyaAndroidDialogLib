@@ -172,9 +172,8 @@ abstract class MultiChoiceDialogBase : OkCancelDialog() {
      * ボタンクリックリスナの実装
      */
     protected class DialogButtonClickListener(
-        dialog: MultiChoiceDialogBase,
-        listener: DialogListener
-    ) : OkCancelDialog.DialogButtonClickListener(dialog, listener) {
+        dialog: MultiChoiceDialogBase
+    ) : OkCancelDialog.DialogButtonClickListener(dialog) {
         override fun makeData(): Intent {
             val data = super.makeData()
             data.putExtra(

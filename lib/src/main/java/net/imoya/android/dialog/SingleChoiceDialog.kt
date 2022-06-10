@@ -68,11 +68,11 @@ class SingleChoiceDialog : SingleChoiceDialogBase() {
             ) { _: DialogInterface?, which: Int -> selectedPosition = which }
             .setPositiveButton(
                 arguments.getString(KEY_POSITIVE_BUTTON_TITLE),
-                DialogButtonClickListener(this, listener)
+                DialogButtonClickListener(this)
             )
             .setNegativeButton(
                 arguments.getString(KEY_NEGATIVE_BUTTON_TITLE),
-                DialogButtonClickListener(this, listener)
+                DialogButtonClickListener(this)
             )
             .create()
     }

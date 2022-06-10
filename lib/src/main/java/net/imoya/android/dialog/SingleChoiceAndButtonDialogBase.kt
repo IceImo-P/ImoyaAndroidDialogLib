@@ -166,11 +166,11 @@ abstract class SingleChoiceAndButtonDialogBase : SingleChoiceDialogBase(),
             .setTitle(arguments.getString(KEY_TITLE))
             .setPositiveButton(
                 arguments.getString(KEY_POSITIVE_BUTTON_TITLE),
-                DialogButtonClickListener(this, listener)
+                DialogButtonClickListener(this)
             )
             .setNegativeButton(
                 arguments.getString(KEY_NEGATIVE_BUTTON_TITLE),
-                DialogButtonClickListener(this, listener)
+                DialogButtonClickListener(this)
             )
         val inflater = LayoutInflater.from(builder.context)
         val view = inflater.inflate(R.layout.dialog_single_choise_and_button, null)
