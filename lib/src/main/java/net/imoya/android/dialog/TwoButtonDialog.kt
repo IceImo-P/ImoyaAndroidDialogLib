@@ -157,8 +157,8 @@ open class TwoButtonDialog : DialogBase() {
      */
     public override fun createDialog(savedInstanceState: Bundle?): Dialog {
         val arguments = requireArguments()
-        val buttonClickListener = DialogItemClickListener(this, listener)
-        return AlertDialog.Builder(requireActivity(), this.theme)
+        val buttonClickListener = DialogItemClickListener(this)
+        return AlertDialog.Builder(requireContext(), this.theme)
             .setTitle(arguments.getString(KEY_TITLE))
             .setMessage(arguments.getString(KEY_MESSAGE))
             .setPositiveButton(

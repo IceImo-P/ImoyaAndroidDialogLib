@@ -23,8 +23,9 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 
 /**
  * ダイアログ [Fragment] の abstract
@@ -39,7 +40,7 @@ import androidx.fragment.app.Fragment
  *  [Activity.RESULT_CANCELED] となります。
  */
 @Suppress("unused")
-abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelListener {
+abstract class DialogBase : DialogFragment(), DialogInterface.OnCancelListener {
     @Deprecated("Use DialogListener")
     interface Listener : DialogListener
 
@@ -59,19 +60,14 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
         DialogBuilder(parent, requestCode)
 
     /**
-     * ダイアログのボタンクリックを [DialogListener] へ通知するロジック
+     * ダイアログのボタンクリックを親画面へ通知するロジック
      */
     protected open class DialogItemClickListener(
         /**
          * ダイアログ
          */
         @JvmField
-        protected val dialog: DialogBase,
-        /**
-         * ダイアログのリスナ
-         */
-        @JvmField
-        protected val listener: DialogListener
+        protected val dialog: DialogBase
     ) : DialogInterface.OnClickListener {
         /**
          * 押された項目
@@ -101,9 +97,7 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
          * @param which           クリックされた項目
          */
         protected open fun callListener(dialogInterface: DialogInterface, which: Int) {
-            listener.onDialogResult(
-                dialog.requestCode, Activity.RESULT_OK, makeData()
-            )
+            dialog.setDialogResult(Activity.RESULT_OK, makeData())
         }
 
         /**
@@ -133,7 +127,7 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
     /**
      * リスナ
      */
-    lateinit var listener: DialogListener
+    var listener: DialogListener? = null
 
     /**
      * リクエストコードを取得します。
@@ -151,9 +145,16 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
      */
     override fun onAttach(context: Context) {
         super.onAttach(context)
+
+        DialogLog.v(TAG) { "onAttach(Context): $this: start." }
+        DialogLog.v(TAG) { "Class of context = ${context.javaClass.name}" }
+
         if (context is DialogListener) {
+            DialogLog.v(TAG, "onAttach(Context): attach listener")
             listener = context
         }
+
+        DialogLog.v(TAG) { "onAttach(Context): $this: end" }
     }
 
     /**
@@ -166,9 +167,16 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
     @Suppress("deprecation")
     override fun onAttach(activity: Activity) {
         super.onAttach(activity)
+
+        DialogLog.v(TAG) { "onAttach(Activity): $this: start." }
+        DialogLog.v(TAG) { "Class of activity = ${activity.javaClass.name}" }
+
         if (activity is DialogListener) {
+            DialogLog.v(TAG, "onAttach(Activity): attach listener")
             listener = activity
         }
+
+        DialogLog.v(TAG) { "onAttach(Activity): $this: end" }
     }
 
     /**
@@ -178,11 +186,16 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
      * @return 生成した [Dialog]
      */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        DialogLog.v(TAG) { "onCreateDialog: $this: start" }
+
         val arguments = requireArguments()
         val dialog = createDialog(savedInstanceState)
         dialog.setCancelable(arguments.getBoolean(KEY_CANCELABLE, true))
         dialog.setCanceledOnTouchOutside(arguments.getBoolean(KEY_CANCELED_ON_TOUCH_OUTSIDE, true))
         dialog.setOnCancelListener(this)
+
+        DialogLog.v(TAG) { "onCreateDialog: $this: end" }
+
         return dialog
     }
 
@@ -214,9 +227,38 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
      */
     @Suppress("MemberVisibilityCanBePrivate")
     protected fun callCancelListener() {
-        if (::listener.isInitialized) {
-            listener.onDialogResult(requestCode, Activity.RESULT_CANCELED, null)
+        setDialogResult(Activity.RESULT_CANCELED, null)
+    }
+
+    /**
+     * 親画面へ結果を通知します。
+     *
+     * @param resultCode 結果コード
+     * @param data 追加データ
+     */
+    fun setDialogResult(resultCode: Int, data: Intent?) {
+        DialogLog.v(TAG, "setDialogResult: start")
+
+        val l = listener
+        if (l != null) {
+            DialogLog.v(TAG, "setDialogResult: calling DialogListener#onDialogResult")
+            l.onDialogResult(requestCode, resultCode, data)
+        } else {
+            DialogLog.v(TAG, "setDialogResult: calling setFragmentResult")
+            val bundle = Bundle()
+            bundle.putInt(KEY_INTERNAL_RESULT_CODE, resultCode)
+            if (data != null) {
+                bundle.putString(KEY_INTERNAL_RESULT_DATA_ACTION, data.action)
+                bundle.putParcelable(KEY_INTERNAL_RESULT_DATA_DATA, data.data)
+                bundle.putBundle(KEY_INTERNAL_RESULT_DATA_EXTRA, data.extras)
+            }
+            setFragmentResult("imoya-dialog-$requestCode", bundle)
+            DialogLog.v(TAG) {
+                "setDialogResult: called setFragmentResult(\"imoya-dialog-$requestCode\", bundle)"
+            }
         }
+
+        DialogLog.v(TAG, "setDialogResult: end")
     }
 
     companion object {
@@ -259,6 +301,26 @@ abstract class DialogBase : AppCompatDialogFragment(), DialogInterface.OnCancelL
          * ダイアログ引数キー:ダイアログ外クリック時キャンセル実行フラグ
          */
         /* protected */ const val KEY_CANCELED_ON_TOUCH_OUTSIDE = "canceledOnTouchOutside"
+
+        /**
+         * 内部キー定義: ダイアログ結果コード
+         */
+        const val KEY_INTERNAL_RESULT_CODE = "imoyaDialog-resultCode"
+
+        /**
+         * 内部キー定義: ダイアログ結果-追加データ
+         */
+        const val KEY_INTERNAL_RESULT_DATA_ACTION = "imoyaDialog-resultDataAction"
+
+        /**
+         * 内部キー定義: ダイアログ結果-追加データ
+         */
+        const val KEY_INTERNAL_RESULT_DATA_DATA = "imoyaDialog-resultDataData"
+
+        /**
+         * 内部キー定義: ダイアログ結果-追加データ
+         */
+        const val KEY_INTERNAL_RESULT_DATA_EXTRA = "imoyaDialog-resultDataExtra"
 
         /**
          * Tag for log

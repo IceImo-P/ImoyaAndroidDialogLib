@@ -31,7 +31,7 @@ interface DialogParent {
     /**
      * Returns [DialogListener]
      */
-    val listener: DialogListener
+    val listener: DialogListener?
 
     /**
      * Returns [FragmentManager]

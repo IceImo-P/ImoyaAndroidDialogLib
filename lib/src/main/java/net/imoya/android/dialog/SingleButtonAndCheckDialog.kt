@@ -157,8 +157,8 @@ open class SingleButtonAndCheckDialog : SingleButtonDialog() {
      * ボタンクリックリスナの実装
      */
     private class DialogButtonClickListener(
-        dialog: DialogBase, listener: DialogListener
-    ) : DialogItemClickListener(dialog, listener) {
+        dialog: DialogBase
+    ) : DialogItemClickListener(dialog) {
         override fun makeData(): Intent {
             // チェックボックス状態を含める
             val data = Intent()
@@ -180,12 +180,12 @@ open class SingleButtonAndCheckDialog : SingleButtonDialog() {
 
     override fun createDialog(savedInstanceState: Bundle?): Dialog {
         val arguments = requireArguments()
-        val builder = AlertDialog.Builder(requireActivity(), theme)
+        val builder = AlertDialog.Builder(requireContext(), theme)
             .setTitle(arguments.getString(KEY_TITLE))
             .setMessage(arguments.getString(KEY_MESSAGE))
             .setPositiveButton(
                 arguments.getString(KEY_BUTTON_TITLE),
-                DialogButtonClickListener(this, listener)
+                DialogButtonClickListener(this)
             )
         val view = LayoutInflater.from(builder.context).inflate(
             arguments.getInt(

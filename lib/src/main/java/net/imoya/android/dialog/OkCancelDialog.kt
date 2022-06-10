@@ -114,9 +114,8 @@ open class OkCancelDialog : TwoButtonDialog() {
      * ボタンクリックリスナの実装
      */
     protected open class DialogButtonClickListener(
-        dialog: OkCancelDialog,
-        listener: DialogListener
-    ) : DialogItemClickListener(dialog, listener) {
+        dialog: OkCancelDialog
+    ) : DialogItemClickListener(dialog) {
         /**
          * 親画面へ通知する結果コードを返します。
          *
@@ -135,16 +134,14 @@ open class OkCancelDialog : TwoButtonDialog() {
          * @param which           クリックされたボタンの位置
          */
         override fun callListener(dialogInterface: DialogInterface, which: Int) {
-            listener.onDialogResult(
-                dialog.requestCode, getResultCode(which), makeData()
-            )
+            dialog.setDialogResult(getResultCode(which), makeData())
         }
     }
 
     override fun createDialog(savedInstanceState: Bundle?): Dialog {
-        val buttonClickListener = DialogButtonClickListener(this, listener)
+        val buttonClickListener = DialogButtonClickListener(this)
         val arguments = requireArguments()
-        return AlertDialog.Builder(requireActivity(), this.theme)
+        return AlertDialog.Builder(requireContext(), this.theme)
             .setTitle(arguments.getString(KEY_TITLE))
             .setMessage(arguments.getString(KEY_MESSAGE))
             .setPositiveButton(

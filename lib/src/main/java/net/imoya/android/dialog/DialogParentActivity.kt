@@ -32,7 +32,7 @@ open class DialogParentActivity<T>(
     override val context: Context
         get() = activity.applicationContext
 
-    override val listener: DialogListener
+    override val listener: DialogListener?
         get() = activity
 
     override val fragmentManager: FragmentManager

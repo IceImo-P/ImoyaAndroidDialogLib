@@ -198,8 +198,8 @@ class TextInputDialog : InputDialog() {
     /**
      * ボタンクリックリスナの実装
      */
-    private class DialogButtonClickListener(dialog: TextInputDialog, listener: DialogListener) :
-        InputDialog.DialogButtonClickListener(dialog, listener) {
+    private class DialogButtonClickListener(dialog: TextInputDialog) :
+        InputDialog.DialogButtonClickListener(dialog) {
 
         /**
          * ボタン押下時に [DialogListener.onDialogResult] へ入力する [Intent] を生成して返します。
@@ -228,7 +228,7 @@ class TextInputDialog : InputDialog() {
      * @return [InputDialog.DialogButtonClickListener]
      */
     override val dialogButtonClickListener: InputDialog.DialogButtonClickListener
-        get() = DialogButtonClickListener(this, listener)
+        get() = DialogButtonClickListener(this)
 
     /**
      * ダイアログへ組み込む入力部分の [View]

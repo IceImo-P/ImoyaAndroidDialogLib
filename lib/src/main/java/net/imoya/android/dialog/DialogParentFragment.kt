@@ -27,14 +27,14 @@ import androidx.fragment.app.FragmentManager
  */
 @Suppress("unused")
 open class DialogParentFragment<T>(
-    protected val fragment: T
+    val fragment: T
 ) : DialogParent where T : Fragment, T : DialogListener {
     override val context: Context
         get() = fragment.requireContext().applicationContext
 
-    override val listener: DialogListener
-        get() = fragment
+    override val listener: DialogListener?
+        get() = null
 
     override val fragmentManager: FragmentManager
-        get() = fragment.parentFragmentManager
+        get() = fragment.childFragmentManager
 }
