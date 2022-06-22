@@ -19,22 +19,33 @@ package net.imoya.android.dialog
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LifecycleOwner
 
 /**
- * ダイアログ親画面となる [AppCompatActivity]
- *
- *  * 親画面となる [AppCompatActivity] は [DialogListener] を実装する必要があります。
+ * ダイアログの親画面となる [AppCompatActivity]
  */
 @Suppress("unused")
-open class DialogParentActivity<T>(
-    protected val activity: T
-) : DialogParent where T : AppCompatActivity, T : DialogListener {
+open class DialogParentActivity(
+    /**
+     * 親画面となる [AppCompatActivity]
+     */
+    @JvmField
+    protected val activity: AppCompatActivity,
+    /**
+     * ダイアログより結果を受け取る [DialogListener]
+     */
+    @JvmField
+    protected var dialogListener: DialogListener
+) : DialogParent {
     override val context: Context
         get() = activity.applicationContext
 
-    override val listener: DialogListener?
-        get() = activity
+    override val listener: DialogListener
+        get() = dialogListener
 
     override val fragmentManager: FragmentManager
         get() = activity.supportFragmentManager
+
+    override val lifecycleOwner: LifecycleOwner
+        get() = activity
 }

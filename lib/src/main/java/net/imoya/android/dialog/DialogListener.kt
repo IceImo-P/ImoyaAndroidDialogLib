@@ -19,9 +19,11 @@ package net.imoya.android.dialog
 import android.content.Intent
 
 /**
- * ダイアログリスナ
+ * ダイアログリスナー
+ *
+ * ダイアログの結果を受け取るリスナー interface です。
  */
-interface DialogListener {
+fun interface DialogListener {
     /**
      * ダイアログ終了時にコールされ、ユーザの選択結果を通知します。
      *

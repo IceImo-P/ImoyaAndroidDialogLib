@@ -41,7 +41,7 @@ open class TwoButtonDialog : DialogBase() {
     /**
      * ダイアログビルダ
      *
-     * @param parent    親画面
+     * @param parent      親画面
      * @param requestCode リクエストコード
      */
     open class Builder(parent: DialogParent, requestCode: Int) :
@@ -157,7 +157,7 @@ open class TwoButtonDialog : DialogBase() {
      */
     public override fun createDialog(savedInstanceState: Bundle?): Dialog {
         val arguments = requireArguments()
-        val buttonClickListener = DialogItemClickListener(this)
+        val buttonClickListener = DialogItemClickHandler(this)
         return AlertDialog.Builder(requireContext(), this.theme)
             .setTitle(arguments.getString(KEY_TITLE))
             .setMessage(arguments.getString(KEY_MESSAGE))
