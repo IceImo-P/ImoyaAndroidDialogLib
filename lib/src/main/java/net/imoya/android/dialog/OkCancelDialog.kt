@@ -115,7 +115,7 @@ open class OkCancelDialog : TwoButtonDialog() {
      */
     protected open class DialogButtonClickListener(
         dialog: OkCancelDialog
-    ) : DialogItemClickListener(dialog) {
+    ) : DialogItemClickHandler(dialog) {
         /**
          * 親画面へ通知する結果コードを返します。
          *
@@ -133,7 +133,7 @@ open class OkCancelDialog : TwoButtonDialog() {
          * @param dialogInterface [DialogInterface]
          * @param which           クリックされたボタンの位置
          */
-        override fun callListener(dialogInterface: DialogInterface, which: Int) {
+        override fun setResult(dialogInterface: DialogInterface, which: Int) {
             dialog.setDialogResult(getResultCode(which), makeData())
         }
     }

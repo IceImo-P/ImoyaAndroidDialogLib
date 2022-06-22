@@ -18,7 +18,6 @@ package net.imoya.android.dialog
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -41,94 +40,6 @@ import androidx.fragment.app.setFragmentResult
  */
 @Suppress("unused")
 abstract class DialogBase : DialogFragment(), DialogInterface.OnCancelListener {
-    @Deprecated("Use DialogListener")
-    interface Listener : DialogListener
-
-    @Deprecated("Use DialogParent")
-    interface BuilderParent : DialogParent
-
-    @Deprecated("Use DialogParentActivity")
-    class BuilderParentActivity<T>(activity: T) :
-        DialogParentActivity<T>(activity) where T : AppCompatActivity, T : DialogListener
-
-    @Deprecated("Use DialogParentFragment")
-    class BuilderParentFragment<T>(fragment: T) :
-        DialogParentFragment<T>(fragment) where T : Fragment, T : DialogListener
-
-    @Deprecated("Use DialogBuilder")
-    abstract class Builder(parent: DialogParent, requestCode: Int) :
-        DialogBuilder(parent, requestCode)
-
-    /**
-     * ダイアログのボタンクリックを親画面へ通知するロジック
-     */
-    protected open class DialogItemClickListener(
-        /**
-         * ダイアログ
-         */
-        @JvmField
-        protected val dialog: DialogBase
-    ) : DialogInterface.OnClickListener {
-        /**
-         * 押された項目
-         */
-        @JvmField
-        protected var which = 0
-
-        /**
-         * ボタン押下時に [DialogListener.onDialogResult] へ入力する [Intent] を生成して返します。
-         *
-         * @return [Intent]
-         */
-        protected open fun makeData(): Intent {
-            val data = Intent()
-            data.putExtra(EXTRA_KEY_WHICH, which)
-            val tag = dialog.tag
-            if (tag != null) {
-                data.putExtra(EXTRA_KEY_TAG, tag)
-            }
-            return data
-        }
-
-        /**
-         * ダイアログリスナへ、クリックを通知します。
-         *
-         * @param dialogInterface [DialogInterface]
-         * @param which           クリックされた項目
-         */
-        protected open fun callListener(dialogInterface: DialogInterface, which: Int) {
-            dialog.setDialogResult(Activity.RESULT_OK, makeData())
-        }
-
-        /**
-         * 項目クリック時の処理
-         *
-         * @param dialogInterface [DialogInterface]
-         * @param which           クリックされた項目
-         */
-        override fun onClick(dialogInterface: DialogInterface, which: Int) {
-            this.which = which
-            try {
-                // 親画面へ通知する
-                callListener(dialogInterface, which)
-            } catch (e: Exception) {
-                DialogLog.e(TAG, "Exception", e)
-            }
-        }
-
-        companion object {
-            /**
-             * Tag for log
-             */
-            private const val TAG = "DialogItemClickListener"
-        }
-    }
-
-    /**
-     * リスナ
-     */
-    var listener: DialogListener? = null
-
     /**
      * リクエストコードを取得します。
      *
@@ -136,48 +47,6 @@ abstract class DialogBase : DialogFragment(), DialogInterface.OnCancelListener {
      */
     val requestCode: Int
         get() = requireArguments().getInt(KEY_REQUEST_CODE)
-
-    /**
-     * Called when a fragment is first attached to its context.
-     * [Fragment.onCreate] will be called after this.
-     *
-     * @param context [Context]
-     */
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        DialogLog.v(TAG) { "onAttach(Context): $this: start." }
-        DialogLog.v(TAG) { "Class of context = ${context.javaClass.name}" }
-
-        if (context is DialogListener) {
-            DialogLog.v(TAG, "onAttach(Context): attach listener")
-            listener = context
-        }
-
-        DialogLog.v(TAG) { "onAttach(Context): $this: end" }
-    }
-
-    /**
-     * Called when a fragment is first attached to its owner [Activity].
-     * [Fragment.onCreate] will be called after this.
-     *
-     * @param activity [Activity]
-     */
-    @Deprecated("Deprecated in Java")
-    @Suppress("deprecation")
-    override fun onAttach(activity: Activity) {
-        super.onAttach(activity)
-
-        DialogLog.v(TAG) { "onAttach(Activity): $this: start." }
-        DialogLog.v(TAG) { "Class of activity = ${activity.javaClass.name}" }
-
-        if (activity is DialogListener) {
-            DialogLog.v(TAG, "onAttach(Activity): attach listener")
-            listener = activity
-        }
-
-        DialogLog.v(TAG) { "onAttach(Activity): $this: end" }
-    }
 
     /**
      * ダイアログ生成処理
@@ -234,28 +103,21 @@ abstract class DialogBase : DialogFragment(), DialogInterface.OnCancelListener {
      * 親画面へ結果を通知します。
      *
      * @param resultCode 結果コード
-     * @param data 追加データ
+     * @param data       追加データ
      */
     fun setDialogResult(resultCode: Int, data: Intent?) {
         DialogLog.v(TAG, "setDialogResult: start")
 
-        val l = listener
-        if (l != null) {
-            DialogLog.v(TAG, "setDialogResult: calling DialogListener#onDialogResult")
-            l.onDialogResult(requestCode, resultCode, data)
-        } else {
-            DialogLog.v(TAG, "setDialogResult: calling setFragmentResult")
-            val bundle = Bundle()
-            bundle.putInt(KEY_INTERNAL_RESULT_CODE, resultCode)
-            if (data != null) {
-                bundle.putString(KEY_INTERNAL_RESULT_DATA_ACTION, data.action)
-                bundle.putParcelable(KEY_INTERNAL_RESULT_DATA_DATA, data.data)
-                bundle.putBundle(KEY_INTERNAL_RESULT_DATA_EXTRA, data.extras)
-            }
-            setFragmentResult("imoya-dialog-$requestCode", bundle)
-            DialogLog.v(TAG) {
-                "setDialogResult: called setFragmentResult(\"imoya-dialog-$requestCode\", bundle)"
-            }
+        DialogLog.v(TAG, "setDialogResult: calling setFragmentResult")
+        val bundle = Bundle()
+        bundle.putInt(KEY_INTERNAL_RESULT_CODE, resultCode)
+        if (data != null) {
+            bundle.putParcelable(KEY_INTERNAL_RESULT_DATA, data)
+        }
+        val requestKey = DialogUtil.getRequestKey(requestCode)
+        setFragmentResult(requestKey, bundle)
+        DialogLog.v(TAG) {
+            "setDialogResult: called setFragmentResult(\"$requestKey\", bundle)"
         }
 
         DialogLog.v(TAG, "setDialogResult: end")
@@ -310,17 +172,7 @@ abstract class DialogBase : DialogFragment(), DialogInterface.OnCancelListener {
         /**
          * 内部キー定義: ダイアログ結果-追加データ
          */
-        const val KEY_INTERNAL_RESULT_DATA_ACTION = "imoyaDialog-resultDataAction"
-
-        /**
-         * 内部キー定義: ダイアログ結果-追加データ
-         */
-        const val KEY_INTERNAL_RESULT_DATA_DATA = "imoyaDialog-resultDataData"
-
-        /**
-         * 内部キー定義: ダイアログ結果-追加データ
-         */
-        const val KEY_INTERNAL_RESULT_DATA_EXTRA = "imoyaDialog-resultDataExtra"
+        const val KEY_INTERNAL_RESULT_DATA = "imoyaDialog-resultData"
 
         /**
          * Tag for log

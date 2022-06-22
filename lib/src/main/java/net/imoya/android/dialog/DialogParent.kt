@@ -18,6 +18,7 @@ package net.imoya.android.dialog
 
 import android.content.Context
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LifecycleOwner
 
 /**
  * ダイアログの親画面が実装する interface
@@ -31,10 +32,28 @@ interface DialogParent {
     /**
      * Returns [DialogListener]
      */
-    val listener: DialogListener?
+    val listener: DialogListener
 
     /**
      * Returns [FragmentManager]
      */
     val fragmentManager: FragmentManager
+
+    /**
+     * Returns [LifecycleOwner]
+     */
+    val lifecycleOwner: LifecycleOwner
+
+    /**
+     * 指定のリクエストコードで表示したダイアログの終了時に、
+     * [FragmentManager] が [DialogListener.onDialogResult] をコールように設定します。
+     *
+     * 登録のタイミングはいつでも良いですが、なるべく画面の生成時に実行することを推奨します。
+     *
+     * @param requestCode リクエストコード
+     */
+    @Suppress("unused")
+    fun registerListener(requestCode: Int) {
+        DialogUtil.registerDialogListener(this, requestCode)
+    }
 }

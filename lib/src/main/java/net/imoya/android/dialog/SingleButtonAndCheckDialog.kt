@@ -158,7 +158,7 @@ open class SingleButtonAndCheckDialog : SingleButtonDialog() {
      */
     private class DialogButtonClickListener(
         dialog: DialogBase
-    ) : DialogItemClickListener(dialog) {
+    ) : DialogItemClickHandler(dialog) {
         override fun makeData(): Intent {
             // チェックボックス状態を含める
             val data = Intent()

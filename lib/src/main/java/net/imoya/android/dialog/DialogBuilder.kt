@@ -20,11 +20,11 @@ import android.content.Context
 import android.os.Bundle
 
 /**
- * ダイアログビルダの基底クラス
+ * ダイアログビルダーの基底クラス
  *
  * @see [DialogBase]
  *
- * @param parent    親画面
+ * @param parent      親画面
  * @param requestCode リクエストコード
  */
 abstract class DialogBuilder(
@@ -160,7 +160,6 @@ abstract class DialogBuilder(
     open fun show() {
         val fragment = createFragment()
         fragment.arguments = makeArguments()
-        fragment.listener = parent.listener
         fragment.show(parent.fragmentManager, tag)
     }
 

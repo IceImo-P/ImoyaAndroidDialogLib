@@ -39,7 +39,7 @@ open class SingleButtonDialog : DialogBase() {
     /**
      * ダイアログビルダ
      *
-     * @param parent    親画面
+     * @param parent      親画面
      * @param requestCode リクエストコード
      */
     open class Builder(parent: DialogParent, requestCode: Int) :
@@ -128,7 +128,7 @@ open class SingleButtonDialog : DialogBase() {
             .setMessage(arguments.getString(KEY_MESSAGE))
             .setPositiveButton(
                 arguments.getString(KEY_BUTTON_TITLE),
-                DialogItemClickListener(this)
+                DialogItemClickHandler(this)
             )
             .create()
     }
