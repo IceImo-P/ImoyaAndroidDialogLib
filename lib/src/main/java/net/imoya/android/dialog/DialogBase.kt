@@ -24,7 +24,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
 
 /**
  * ダイアログ [Fragment] の abstract
@@ -115,7 +114,7 @@ abstract class DialogBase : DialogFragment(), DialogInterface.OnCancelListener {
             bundle.putParcelable(KEY_INTERNAL_RESULT_DATA, data)
         }
         val requestKey = DialogUtil.getRequestKey(requestCode)
-        setFragmentResult(requestKey, bundle)
+        parentFragmentManager.setFragmentResult(requestKey, bundle)
         DialogLog.v(TAG) {
             "setDialogResult: called setFragmentResult(\"$requestKey\", bundle)"
         }
