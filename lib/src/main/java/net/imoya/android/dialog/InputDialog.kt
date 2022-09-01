@@ -207,7 +207,7 @@ abstract class InputDialog : OkCancelDialog() {
     }
 
     /**
-     * ボタンクリックリスナの実装
+     * ボタンクリックリスナ
      */
     protected abstract class DialogButtonClickListener(
         dialog: InputDialog
