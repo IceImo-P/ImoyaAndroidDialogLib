@@ -16,8 +16,10 @@
 
 package net.imoya.android.dialog
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentResultListener
+import net.imoya.android.util.BundleUtil
 
 /**
  * [FragmentResultListener] が受け取った結果を [DialogListener] へ通知するロジック
@@ -34,7 +36,7 @@ open class FragmentResultHandler(
         listener.onDialogResult(
             requestCode,
             result.getInt(DialogBase.KEY_INTERNAL_RESULT_CODE),
-            result.getParcelable(DialogBase.KEY_INTERNAL_RESULT_DATA)
+            BundleUtil.getParcelable(result, DialogBase.KEY_INTERNAL_RESULT_DATA, Intent::class.java)
         )
 
         DialogLog.v(TAG) { "onFragmentResult: end. requestCode = $requestCode" }

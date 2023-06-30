@@ -39,7 +39,6 @@ import net.imoya.android.dialog.MultiChoiceDialog.Builder
  * [DialogListener.onDialogResult] メソッドの引数 resultCode の値が
  * [Activity.RESULT_CANCELED] となります。
  */
-@Suppress("unused")
 class MultiChoiceDialog : MultiChoiceDialogBase() {
     /**
      * ダイアログビルダ
