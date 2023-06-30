@@ -37,7 +37,6 @@ import androidx.fragment.app.Fragment
  *  * ダイアログがキャンセル終了した場合、 [DialogListener.onDialogResult] メソッドの引数 resultCode の値が
  *  [Activity.RESULT_CANCELED] となります。
  */
-@Suppress("unused")
 abstract class DialogBase : DialogFragment(), DialogInterface.OnCancelListener {
     /**
      * リクエストコードを取得します。
@@ -60,7 +59,6 @@ abstract class DialogBase : DialogFragment(), DialogInterface.OnCancelListener {
         val dialog = createDialog(savedInstanceState)
         dialog.setCancelable(arguments.getBoolean(KEY_CANCELABLE, true))
         dialog.setCanceledOnTouchOutside(arguments.getBoolean(KEY_CANCELED_ON_TOUCH_OUTSIDE, true))
-        dialog.setOnCancelListener(this)
 
         DialogLog.v(TAG) { "onCreateDialog: $this: end" }
 

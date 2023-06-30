@@ -51,14 +51,12 @@ abstract class MultiChoiceDialogBase : OkCancelDialog() {
         /**
          * 選択項目リスト
          */
-        @Suppress("MemberVisibilityCanBePrivate")
         @JvmField
         protected var items: Array<String>? = null
 
         /**
          * 全項目の初期選択状態リスト
          */
-        @Suppress("MemberVisibilityCanBePrivate")
         @JvmField
         protected var checkedList: BooleanArray? = null
 
